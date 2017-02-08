@@ -37,7 +37,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.44657844, g: 0.49641222, b: 0.57481694, a: 1}
+  m_IndirectSpecularColor: {r: 0.44657826, g: 0.49641263, b: 0.57481676, a: 1}
 --- !u!157 &3
 LightmapSettings:
   m_ObjectHideFlags: 0
@@ -182,6 +182,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 315a8d6de5f627547b1371b82c742c22, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  track: {fileID: 0}
+  speed: 0
 --- !u!1 &125473846
 GameObject:
   m_ObjectHideFlags: 0
@@ -212,6 +214,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 568e6bc12b797684c90d46ca6597875c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  speed: 0.5
+  direction: {x: -1, y: 0, z: 0}
+  tiles: []
+  hasTile: 0
 --- !u!212 &125473848
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -324,6 +330,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 164d8d10efe0fe14d8615f08a7a545e1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  speed: 2
+  player: 65
+  inRange: 0
+  tile: {fileID: 0}
 --- !u!212 &250665394
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -568,7 +578,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7ae85fb8e4ac7ff478489c5ac0ebbbe7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-<<<<<<< HEAD
   tiles: []
 --- !u!1 &835503295
 GameObject:
@@ -634,8 +643,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 8
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-=======
->>>>>>> 003a7f34e470977f653891f2bf0e43a4f660e88d
 --- !u!1 &918465576
 GameObject:
   m_ObjectHideFlags: 0
@@ -665,6 +672,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 164d8d10efe0fe14d8615f08a7a545e1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  speed: 2
+  player: 66
+  inRange: 0
+  tile: {fileID: 0}
 --- !u!212 &918465578
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -824,92 +835,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 315a8d6de5f627547b1371b82c742c22, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-<<<<<<< HEAD
   track: {fileID: 0}
   speed: 0
-=======
---- !u!1 &1643057481
-GameObject:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  serializedVersion: 5
-  m_Component:
-  - component: {fileID: 1643057485}
-  - component: {fileID: 1643057484}
-  - component: {fileID: 1643057483}
-  - component: {fileID: 1643057482}
-  m_Layer: 0
-  m_Name: Cube
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!23 &1643057482
-MeshRenderer:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1643057481}
-  m_Enabled: 1
-  m_CastShadows: 1
-  m_ReceiveShadows: 1
-  m_MotionVectors: 1
-  m_LightProbeUsage: 1
-  m_ReflectionProbeUsage: 1
-  m_Materials:
-  - {fileID: 10303, guid: 0000000000000000f000000000000000, type: 0}
-  m_StaticBatchInfo:
-    firstSubMesh: 0
-    subMeshCount: 0
-  m_StaticBatchRoot: {fileID: 0}
-  m_ProbeAnchor: {fileID: 0}
-  m_LightProbeVolumeOverride: {fileID: 0}
-  m_ScaleInLightmap: 1
-  m_PreserveUVs: 1
-  m_IgnoreNormalsForChartDetection: 0
-  m_ImportantGI: 0
-  m_SelectedEditorRenderState: 3
-  m_MinimumChartSize: 4
-  m_AutoUVMaxDistance: 0.5
-  m_AutoUVMaxAngle: 89
-  m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 0
-  m_SortingOrder: 0
---- !u!65 &1643057483
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1643057481}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 1, y: 1, z: 1}
-  m_Center: {x: 0, y: 0, z: 0}
---- !u!33 &1643057484
-MeshFilter:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1643057481}
-  m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
---- !u!4 &1643057485
-Transform:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1643057481}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.02, y: -1.53, z: 0.82}
-  m_LocalScale: {x: 0.27175343, y: 2.1972718, z: 0.29638463}
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_RootOrder: 2
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
->>>>>>> 003a7f34e470977f653891f2bf0e43a4f660e88d
 --- !u!1 &2073641294
 GameObject:
   m_ObjectHideFlags: 0
@@ -974,6 +901,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 568e6bc12b797684c90d46ca6597875c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  speed: 0.5
+  direction: {x: -1, y: 0, z: 0}
+  tiles: []
+  hasTile: 0
 --- !u!212 &2073641298
 SpriteRenderer:
   m_ObjectHideFlags: 0
