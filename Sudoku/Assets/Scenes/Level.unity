@@ -37,7 +37,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.44657826, g: 0.49641263, b: 0.57481676, a: 1}
+  m_IndirectSpecularColor: {r: 0.44657844, g: 0.49641222, b: 0.57481694, a: 1}
 --- !u!157 &3
 LightmapSettings:
   m_ObjectHideFlags: 0
@@ -182,8 +182,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 315a8d6de5f627547b1371b82c742c22, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  track: {fileID: 0}
-  speed: 0
 --- !u!1 &125473846
 GameObject:
   m_ObjectHideFlags: 0
@@ -214,10 +212,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 568e6bc12b797684c90d46ca6597875c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 0.5
-  direction: {x: -1, y: 0, z: 0}
-  tiles: []
-  hasTile: 0
 --- !u!212 &125473848
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -411,10 +405,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 164d8d10efe0fe14d8615f08a7a545e1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 2
-  player: 65
-  inRange: 0
-  tile: {fileID: 0}
 --- !u!212 &250665394
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -659,7 +649,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7ae85fb8e4ac7ff478489c5ac0ebbbe7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  tiles: []
 --- !u!1 &918465576
 GameObject:
   m_ObjectHideFlags: 0
@@ -689,10 +678,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 164d8d10efe0fe14d8615f08a7a545e1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 2
-  player: 66
-  inRange: 0
-  tile: {fileID: 0}
 --- !u!212 &918465578
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -933,8 +918,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 315a8d6de5f627547b1371b82c742c22, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  track: {fileID: 0}
-  speed: 0
 --- !u!1 &1643057481
 GameObject:
   m_ObjectHideFlags: 0
@@ -1080,10 +1063,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 568e6bc12b797684c90d46ca6597875c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 0.5
-  direction: {x: -1, y: 0, z: 0}
-  tiles: []
-  hasTile: 0
 --- !u!212 &2073641298
 SpriteRenderer:
   m_ObjectHideFlags: 0
