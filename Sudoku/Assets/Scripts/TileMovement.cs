@@ -28,6 +28,7 @@ public class TileMovement : MonoBehaviour {
         if (col.gameObject.tag == "enemy")
         {
             //pick up tile
+            //stop at tile, pick it up, and then move
             tag = "taken";
             track = col.gameObject;
             speed = track.GetComponent<EnemyMovement>().speed;

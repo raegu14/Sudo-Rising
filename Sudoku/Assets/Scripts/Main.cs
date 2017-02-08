@@ -6,6 +6,9 @@ public class Main : MonoBehaviour {
 
     public GameObject[] tiles;
 
+    //timer to end game
+    // week 2, ranged combat to end game
+
 	// Use this for initialization
 	void Start () {
         tiles = GameObject.FindGameObjectsWithTag("tile");
