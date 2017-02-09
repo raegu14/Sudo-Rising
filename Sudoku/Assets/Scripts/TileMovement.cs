@@ -46,9 +46,9 @@ public class TileMovement : MonoBehaviour {
     {
         if (col.gameObject.tag == "Player")
         {
-            col.gameObject.GetComponent<PlayerMovement>().inRange = true;
             col.gameObject.GetComponent<PlayerMovement>().tile = gameObject;
-
+            col.gameObject.GetComponent<PlayerMovement>().inRange = true;
+            //col.gameObject.GetComponent<PlayerMovement>().tile = gameObject;
         }
     }
 

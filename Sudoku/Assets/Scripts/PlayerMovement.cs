@@ -10,6 +10,9 @@ public class PlayerMovement : MonoBehaviour {
     public bool inRange = false; //in range to pick up tile
     public GameObject tile;
 
+    bool hasTile = false;
+    float cooldown;
+
     string direction;
 
 	// Use this for initialization
@@ -64,11 +67,24 @@ public class PlayerMovement : MonoBehaviour {
             if (Input.GetKey(KeyCode.LeftShift))
             {
                 //pick up item
-                if (inRange)
+                if (inRange && tile != null && Time.time > cooldown + 1.0f)
                 {
-                    tile.tag = "picked";
-                    tile.GetComponent<TileMovement>().track = gameObject;
-                    tile.GetComponent<TileMovement>().speed = speed;
+                    if(!hasTile)
+                    {
+                        hasTile = true;
+                        cooldown = Time.time;
+                        tile.tag = "picked";
+                        tile.GetComponent<TileMovement>().track = gameObject;
+                        tile.GetComponent<TileMovement>().speed = speed;
+                    }
+                    else
+                    {
+                        hasTile = false;
+                        cooldown = Time.time;
+                        tile.GetComponent<TileMovement>().track = null;
+                        tile.GetComponent<TileMovement>().speed = 0;
+                        tile = null;
+                    }
                 }
             }
         }
@@ -96,15 +112,37 @@ public class PlayerMovement : MonoBehaviour {
             if (Input.GetKey(KeyCode.RightControl))
             {
                 //attack
+                transform.GetChild(0).GetComponent<Animation>().Play();
+                if (direction == "left")
+                {
+                    transform.GetChild(0).Rotate(new Vector3(0, 0, 90));
+                }
+                else
+                {
+                    transform.GetChild(0).Rotate(new Vector3(0, 0, -90));
+                }
             }
             if (Input.GetKey(KeyCode.RightShift))
             {
                 //pick up item
-                if (inRange)
+                if (inRange && tile != null && Time.time > cooldown + 1.0f)
                 {
-                    tile.tag = "picked";
-                    tile.GetComponent<TileMovement>().track = gameObject;
-                    tile.GetComponent<TileMovement>().speed = speed;
+                    if (!hasTile)
+                    {
+                        hasTile = true;
+                        cooldown = Time.time;
+                        tile.tag = "picked";
+                        tile.GetComponent<TileMovement>().track = gameObject;
+                        tile.GetComponent<TileMovement>().speed = speed;
+                    }
+                    else
+                    {
+                        hasTile = false;
+                        cooldown = Time.time;
+                        tile.GetComponent<TileMovement>().track = null;
+                        tile.GetComponent<TileMovement>().speed = 0;
+                        tile = null;
+                    }
                 }
             }
         }
