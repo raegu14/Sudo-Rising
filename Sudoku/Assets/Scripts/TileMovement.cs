@@ -15,7 +15,7 @@ public class TileMovement : MonoBehaviour {
 
     // Update is called once per frame
     void Update() {
-        GetComponent<SpriteRenderer>().sortingOrder = -Mathf.RoundToInt(transform.position.y * 100);
+        GetComponent<SpriteRenderer>().sortingOrder = -Mathf.RoundToInt(transform.position.y * 100) - 10;
 
         if (track != null)
         {

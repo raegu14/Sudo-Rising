@@ -8,6 +8,7 @@ TagManager:
   - taken
   - enemy
   - picked
+  - weapon
   layers:
   - Default
   - TransparentFX

@@ -10,6 +10,8 @@ public class PlayerMovement : MonoBehaviour {
     public bool inRange = false; //in range to pick up tile
     public GameObject tile;
 
+    string direction;
+
 	// Use this for initialization
 	void Start () {
 		
@@ -19,6 +21,12 @@ public class PlayerMovement : MonoBehaviour {
 	void Update () {
 
         GetComponent<SpriteRenderer>().sortingOrder = -Mathf.RoundToInt(transform.position.y * 100);
+        transform.GetChild(0).GetComponent<SpriteRenderer>().sortingOrder = GetComponent<SpriteRenderer>().sortingOrder - 1;
+
+        if (transform.GetChild(0).rotation != Quaternion.identity)
+        {
+            transform.GetChild(0).rotation = Quaternion.identity;
+        }
 
         if (player == 'A')
         {
@@ -28,6 +36,7 @@ public class PlayerMovement : MonoBehaviour {
             }
             if (Input.GetKey(KeyCode.A))
             {
+                direction = "left";
                 transform.position += new Vector3(-1, 0, 0) * Time.deltaTime * speed;
             }
             if (Input.GetKey(KeyCode.S))
@@ -36,18 +45,27 @@ public class PlayerMovement : MonoBehaviour {
             }
             if (Input.GetKey(KeyCode.D))
             {
+                direction = "right";
                 transform.position += new Vector3(1, 0, 0) * Time.deltaTime * speed;
             }
             if (Input.GetKey(KeyCode.Space))
             {
-                //attack
+                //play attack animation
+                transform.GetChild(0).GetComponent<Animation>().Play();
+                if(direction == "left")
+                {
+                    transform.GetChild(0).Rotate(new Vector3(0, 0, 90));
+                }
+                else
+                {
+                    transform.GetChild(0).Rotate(new Vector3(0, 0, -90));
+                }
             }
             if (Input.GetKey(KeyCode.LeftShift))
             {
-                print("pressed shift");
+                //pick up item
                 if (inRange)
                 {
-                    print("picked up");
                     tile.tag = "picked";
                     tile.GetComponent<TileMovement>().track = gameObject;
                     tile.GetComponent<TileMovement>().speed = speed;
@@ -63,6 +81,7 @@ public class PlayerMovement : MonoBehaviour {
             }
             if (Input.GetKey(KeyCode.LeftArrow))
             {
+                direction = "left";
                 transform.position += new Vector3(-1, 0, 0) * Time.deltaTime * speed;
             }
             if (Input.GetKey(KeyCode.DownArrow))
@@ -71,6 +90,7 @@ public class PlayerMovement : MonoBehaviour {
             }
             if (Input.GetKey(KeyCode.RightArrow))
             {
+                direction = "right";
                 transform.position += new Vector3(1, 0, 0) * Time.deltaTime * speed;
             }
             if (Input.GetKey(KeyCode.RightControl))
@@ -80,6 +100,12 @@ public class PlayerMovement : MonoBehaviour {
             if (Input.GetKey(KeyCode.RightShift))
             {
                 //pick up item
+                if (inRange)
+                {
+                    tile.tag = "picked";
+                    tile.GetComponent<TileMovement>().track = gameObject;
+                    tile.GetComponent<TileMovement>().speed = speed;
+                }
             }
         }
     }

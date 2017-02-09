@@ -12,6 +12,8 @@ public class EnemyMovement : MonoBehaviour {
 
     public bool hasTile;
 
+    bool death = false;
+
 	// Use this for initialization
 	void Start ()
     {
@@ -36,7 +38,7 @@ public class EnemyMovement : MonoBehaviour {
         {
             //go offscreen
         }
-        else
+        else if (!death)
         {
             //find closest tile and set direction to it
             tiles = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<Main>().tiles;
@@ -56,5 +58,26 @@ public class EnemyMovement : MonoBehaviour {
         }
 
         transform.position += direction.normalized * speed * Time.deltaTime;
+    }
+
+    void OnCollisionEnter2D(Collision2D col)
+    {
+        if (col.collider.gameObject.tag == "weapon")
+        {
+            //tile stops moving
+            closestTile.GetComponent<TileMovement>().track = null;
+            //enemy dies after 1 second, but loses rigidbody
+            Destroy(GetComponent<Rigidbody2D>());
+            death = true;
+            direction = new Vector3();
+            //play death animation
+            StartCoroutine(deathAnim());
+        }
+    }
+
+    IEnumerator deathAnim()
+    {
+        yield return new WaitForSeconds(1);
+        Destroy(gameObject);
     }
 }
