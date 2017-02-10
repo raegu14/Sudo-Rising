@@ -69,14 +69,14 @@ public class PlayerMovement : MonoBehaviour {
                 //pick up item
                 if (inRange && tile != null && Time.time > cooldown + 1.0f)
                 {
-                    if(!hasTile)
-                    {
-                        hasTile = true;
-                        cooldown = Time.time;
-                        tile.tag = "picked";
-                        tile.GetComponent<TileMovement>().track = gameObject;
-                        tile.GetComponent<TileMovement>().speed = speed;
-                    }
+					if(tile.GetComponent<TileMovement>().tileType != "permanent")
+					{
+						hasTile = true;
+						cooldown = Time.time;
+						tile.tag = "picked";
+						tile.GetComponent<TileMovement>().track = gameObject;
+						tile.GetComponent<TileMovement>().speed = speed;
+					}
                     else
                     {
                         hasTile = false;
@@ -129,11 +129,14 @@ public class PlayerMovement : MonoBehaviour {
                 {
                     if (!hasTile)
                     {
-                        hasTile = true;
-                        cooldown = Time.time;
-                        tile.tag = "picked";
-                        tile.GetComponent<TileMovement>().track = gameObject;
-                        tile.GetComponent<TileMovement>().speed = speed;
+						if(tile.GetComponent<TileMovement>().tileType != "permanent")
+						{
+							hasTile = true;
+							cooldown = Time.time;
+							tile.tag = "picked";
+							tile.GetComponent<TileMovement>().track = gameObject;
+							tile.GetComponent<TileMovement>().speed = speed;
+						}
                     }
                     else
                     {

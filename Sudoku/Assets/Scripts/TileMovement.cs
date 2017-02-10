@@ -6,6 +6,8 @@ public class TileMovement : MonoBehaviour {
 
     public GameObject track;
     public float speed;
+	public string tileType;
+	public int value;
     //public Vector3 direction;
 
     // Use this for initialization
