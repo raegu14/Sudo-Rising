@@ -69,23 +69,29 @@ public class PlayerMovement : MonoBehaviour {
                 //pick up item
                 if (inRange && tile != null && Time.time > cooldown + 1.0f)
                 {
-					if(tile.GetComponent<TileMovement>().tileType != "permanent")
+					if(!hasTile)
 					{
-						hasTile = true;
-						cooldown = Time.time;
-						tile.tag = "picked";
-						tile.GetComponent<TileMovement>().track = gameObject;
-						tile.GetComponent<TileMovement>().speed = speed;
+						if(tile.GetComponent<TileMovement>().tileType != "permanent")
+						{
+							hasTile = true;
+							cooldown = Time.time;
+							tile.tag = "picked";
+							tile.GetComponent<TileMovement>().track = gameObject;
+							tile.GetComponent<TileMovement>().speed = speed;
+							tile.transform.GetChild(0).GetComponent<TextMesh>().color = Color.white;
+						}
 					}
-                    else
-                    {
-                        hasTile = false;
-                        cooldown = Time.time;
-                        tile.GetComponent<TileMovement>().track = null;
-                        tile.GetComponent<TileMovement>().speed = 0;
-                        tile = null;
-                    }
-                }
+					else
+					{
+						hasTile = false;
+						cooldown = Time.time;
+						tile.GetComponent<TileMovement>().track = null;
+						tile.GetComponent<TileMovement>().speed = 0;
+						tile.GetComponent<TileMovement>().Snap();
+						tile.GetComponent<TileMovement>().Check();
+						tile = null;
+					}
+				}
             }
         }
 
@@ -136,6 +142,7 @@ public class PlayerMovement : MonoBehaviour {
 							tile.tag = "picked";
 							tile.GetComponent<TileMovement>().track = gameObject;
 							tile.GetComponent<TileMovement>().speed = speed;
+							tile.transform.GetChild(0).GetComponent<TextMesh>().color = Color.white;
 						}
                     }
                     else
@@ -144,6 +151,8 @@ public class PlayerMovement : MonoBehaviour {
                         cooldown = Time.time;
                         tile.GetComponent<TileMovement>().track = null;
                         tile.GetComponent<TileMovement>().speed = 0;
+						tile.GetComponent<TileMovement>().Snap();
+						tile.GetComponent<TileMovement>().Check();
                         tile = null;
                     }
                 }
@@ -158,6 +167,7 @@ public class PlayerMovement : MonoBehaviour {
             //pick up tile
             col.gameObject.tag = "taken";
             GameObject.FindGameObjectWithTag("MainCamera").GetComponent<Main>().tiles = GameObject.FindGameObjectsWithTag("tile");
+			// TODO add tile row/column reclassing
         }
     }
 }

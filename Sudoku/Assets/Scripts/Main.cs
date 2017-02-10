@@ -7,6 +7,7 @@ public class Main : MonoBehaviour {
 
     public GameObject[] tiles;
 	public GameObject tilePrefab;
+	public int setCount;
     
     //timer to end game
     float timer = 500f;
@@ -18,7 +19,7 @@ public class Main : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-		ReadLevel("test");
+		ReadLevel("board");
         tiles = GameObject.FindGameObjectsWithTag("tile");
     }
 
@@ -28,6 +29,10 @@ public class Main : MonoBehaviour {
         {
             print("gameOver");
         }
+		if(setCount == 81)
+		{
+			print("winner");
+		}
 		
 	}
 	void ReadLevel(string fileName) 
@@ -57,7 +62,7 @@ public class Main : MonoBehaviour {
 					}
 					else // Assumed to be actual coordinates
 					{
-						SetTile(firstRead[0], int.Parse(firstRead[1].ToString()), coord[1], "permanent");
+						SetTile(firstRead[0], int.Parse(firstRead[1].ToString()), coord[1], "permanent");						
 						// TODO set non permanent tiles
 					}
 				}
@@ -139,13 +144,14 @@ public class Main : MonoBehaviour {
 				y = 0;
 				break;
 		}
+		if(property == "permanent")
+			setCount++;
 		tile.transform.GetChild(0).transform.GetComponent<TextMesh>().text = val;
 		tile.GetComponent<TileMovement>().value = int.Parse(val);
+		tile.GetComponent<TileMovement>().col = col;
+		tile.GetComponent<TileMovement>().row = row;
 		tile.transform.position = new Vector3(x, y, 0);
 	}
 	
-	void CheckTiles()
-	{
-		
-	}
+
 }
