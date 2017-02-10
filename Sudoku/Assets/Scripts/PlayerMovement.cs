@@ -78,7 +78,7 @@ public class PlayerMovement : MonoBehaviour {
 							tile.tag = "picked";
 							tile.GetComponent<TileMovement>().track = gameObject;
 							tile.GetComponent<TileMovement>().speed = speed;
-							tile.transform.GetChild(0).GetComponent<TextMesh>().color = Color.white;
+							tile.transform.GetChild(0).GetComponent<TextMesh>().color = Color.gray;
 						}
 					}
 					else
@@ -142,7 +142,7 @@ public class PlayerMovement : MonoBehaviour {
 							tile.tag = "picked";
 							tile.GetComponent<TileMovement>().track = gameObject;
 							tile.GetComponent<TileMovement>().speed = speed;
-							tile.transform.GetChild(0).GetComponent<TextMesh>().color = Color.white;
+							tile.transform.GetChild(0).GetComponent<TextMesh>().color = Color.gray;
 						}
                     }
                     else
