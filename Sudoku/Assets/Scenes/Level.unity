@@ -156,7 +156,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   speed: 2
-  player: 65
+  player: 66
   inRange: 0
   tile: {fileID: 0}
 --- !u!212 &53713740

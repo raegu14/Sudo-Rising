@@ -10,11 +10,9 @@ public class TileMovement : MonoBehaviour {
 	public int value;
 	public char col;
 	public int row;
-    //public Vector3 direction;
 
     // Use this for initialization
     void Start() {
-        //direction = new Vector3(0, 0, 0);
     }
 
     // Update is called once per frame
@@ -36,14 +34,9 @@ public class TileMovement : MonoBehaviour {
             tag = "taken";
             track = col.gameObject;
             speed = track.GetComponent<EnemyMovement>().speed;
-            //track = enemy.GetComponent<EnemyMovement>().direction.normalized * Time.deltaTime * enemy.GetComponent<EnemyMovement>().speed;
             track.GetComponent<EnemyMovement>().hasTile = true;
             GameObject.FindGameObjectWithTag("MainCamera").GetComponent<Main>().tiles = GameObject.FindGameObjectsWithTag("tile");
         }
-/*        else if (col.gameObject.tag == "Player")
-        {
-            col.gameObject.GetComponent<PlayerMovement>().inRange = true;
-        }*/
     }
 
     void OnTriggerStay2D(Collider2D col)
@@ -52,7 +45,6 @@ public class TileMovement : MonoBehaviour {
         {
             col.gameObject.GetComponent<PlayerMovement>().tile = gameObject;
             col.gameObject.GetComponent<PlayerMovement>().inRange = true;
-            //col.gameObject.GetComponent<PlayerMovement>().tile = gameObject;
         }
     }
 

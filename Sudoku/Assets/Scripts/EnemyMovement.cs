@@ -65,7 +65,10 @@ public class EnemyMovement : MonoBehaviour {
         if (col.collider.gameObject.tag == "weapon")
         {
             //tile stops moving
-            closestTile.GetComponent<TileMovement>().track = null;
+            if (closestTile != null)
+            {
+                closestTile.GetComponent<TileMovement>().track = null;
+            }
             //enemy dies after 1 second, but loses rigidbody
             Destroy(GetComponent<Rigidbody2D>());
             death = true;
