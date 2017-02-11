@@ -116,14 +116,14 @@ public class TileMovement : MonoBehaviour {
 		if(check) // No conflicts
 		{
 			// Turn tile green
-			transform.GetChild(0).GetComponent<TextMesh>().color = Color.green;
+			//transform.GetChild(0).GetComponent<TextMesh>().color = Color.green;
 			tileType = "set";
 			main.setCount++;
 		}
 		else
 		{
 			//Turn tile red
-			transform.GetChild(0).GetComponent<TextMesh>().color = Color.red;
+			//transform.GetChild(0).GetComponent<TextMesh>().color = Color.red;
 			tileType = "incorrect";
 		}
 	}

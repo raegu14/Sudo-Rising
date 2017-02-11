@@ -8,6 +8,11 @@ public class Main : MonoBehaviour {
     public GameObject[] tiles;
 	public GameObject tilePrefab;
 	public int setCount;
+
+    public GameObject[] enemySpaces;
+    float spawnTimer;
+    float spawnRate = 2f;
+    public GameObject[] enemies;
     
     //timer to end game
     float timer = 500f;
@@ -20,7 +25,9 @@ public class Main : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 		ReadLevel("board");
+        enemySpaces = GameObject.FindGameObjectsWithTag("enemyspawn");
         tiles = GameObject.FindGameObjectsWithTag("tile");
+        spawnTimer = Time.time;
     }
 
     // Update is called once per frame
@@ -33,6 +40,18 @@ public class Main : MonoBehaviour {
 		{
 			print("winner");
 		}
+
+        print(Time.time);
+        print(spawnTimer + spawnRate);
+
+        if(spawnTimer + spawnRate < Time.time)
+        {
+            spawnTimer = Time.time;
+            //spawnRate /= 0.01;
+            int index = Random.Range(0, 20);
+            int enemyType = Random.Range(0, 2);
+            Instantiate(enemies[enemyType], enemySpaces[index].transform.position, enemySpaces[index].transform.rotation);
+        }
 		
 	}
 	void ReadLevel(string fileName) 
