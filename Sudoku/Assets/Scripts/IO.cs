@@ -16,6 +16,7 @@ public class IO : MonoBehaviour {
 		
 	}
 	
+	// DEPRECATED -- please refer to Main.cs
 	void ReadLevel(string fileName) 
 	{
 		TextAsset levelData = (TextAsset)Resources.Load(fileName, typeof(TextAsset));

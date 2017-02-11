@@ -5,14 +5,19 @@ using UnityEngine;
 
 public class Main : MonoBehaviour {
 
+    public Sprite staticTile;
+
     public GameObject[] tiles;
 	public GameObject tilePrefab;
 	public int setCount;
 
     public GameObject[] enemySpaces;
+    public GameObject[] enemies;
     float spawnTimer;
     float spawnRate = 2f;
-    public GameObject[] enemies;
+	
+	public int[] tileCounter = new int[10];
+	public int[,] solution = new int[10, 10];
     
     //timer to end game
     float timer = 500f;
@@ -24,15 +29,18 @@ public class Main : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-		ReadLevel("board");
         enemySpaces = GameObject.FindGameObjectsWithTag("enemyspawn");
-        tiles = GameObject.FindGameObjectsWithTag("tile");
+        tiles = GameObject.FindGameObjectsWithTag("picked");
         spawnTimer = Time.time;
+        ReadLevel("board");
+
     }
 
     // Update is called once per frame
     void Update () {
-        if(timer < Time.time)
+        tiles = GameObject.FindGameObjectsWithTag("picked");
+
+        if (timer < Time.time)
         {
             print("gameOver");
         }
@@ -41,17 +49,15 @@ public class Main : MonoBehaviour {
 			print("winner");
 		}
 
-        print(Time.time);
-        print(spawnTimer + spawnRate);
-
         if(spawnTimer + spawnRate < Time.time)
         {
             spawnTimer = Time.time;
-            //spawnRate /= 0.01;
             int index = Random.Range(0, 20);
             int enemyType = Random.Range(0, 2);
             Instantiate(enemies[enemyType], enemySpaces[index].transform.position, enemySpaces[index].transform.rotation);
         }
+		
+		// TODO spawn tiles
 		
 	}
 	void ReadLevel(string fileName) 
@@ -81,20 +87,27 @@ public class Main : MonoBehaviour {
 					}
 					else // Assumed to be actual coordinates
 					{
-						SetTile(firstRead[0], int.Parse(firstRead[1].ToString()), coord[1], "permanent");						
-						// TODO set non permanent tiles
+						int val = int.Parse(coord[1]);
+						int row = int.Parse(firstRead[1].ToString());
+						if(coord[3] == "P")
+						{
+							SetTile(firstRead[0], row, val, "permanent");
+							tileCounter[val]++;
+						}
+						solution[firstRead[0] - 'A', row] = val;
 					}
 				}
 				line = reader.ReadLine();
 			}
-		}
+		}		
 	}
 	
 	// Set the tile at Column, Row with a specific property
 	// i.e. setTile('D', 4, 4, "permanent"); or something like that
-	void SetTile(char col, int row, string val, string property) 
+	void SetTile(char col, int row, int val, string property) 
 	{
 		GameObject tile = Instantiate(tilePrefab);
+        tile.GetComponent<SpriteRenderer>().sprite = staticTile;
 		tile.GetComponent<TileMovement>().tileType = property;
 		float x, y;
 		switch(col)
@@ -128,6 +141,7 @@ public class Main : MonoBehaviour {
 				break;
 			default:
 				x = 0;
+				Debug.Log("what the heck is this col??");
 				break;
 		}
 		switch(row) 
@@ -161,14 +175,30 @@ public class Main : MonoBehaviour {
 				break;
 			default:
 				y = 0;
+				Debug.Log("what the heck is this row??");
 				break;
 		}
 		if(property == "permanent")
 			setCount++;
-		tile.transform.GetChild(0).transform.GetComponent<TextMesh>().text = val;
-		tile.GetComponent<TileMovement>().value = int.Parse(val);
+		tile.transform.GetChild(0).transform.GetComponent<TextMesh>().text = val.ToString();
+		tile.GetComponent<TileMovement>().value = val;
 		tile.GetComponent<TileMovement>().col = col;
 		tile.GetComponent<TileMovement>().row = row;
+		tile.transform.position = new Vector3(x, y, 0);
+	}
+	
+	// Set tile at specified coordinates
+	void SetTile(float x, float y, int val, string property)
+	{
+		GameObject tile = Instantiate(tilePrefab);
+		tile.GetComponent<TileMovement>().tileType = property;
+		
+		if(property == "permanent")
+			setCount++;
+		tile.transform.GetChild(0).transform.GetComponent<TextMesh>().text = val.ToString();
+		tile.GetComponent<TileMovement>().value = val;
+		tile.GetComponent<TileMovement>().col = '0';
+		tile.GetComponent<TileMovement>().row = 0;
 		tile.transform.position = new Vector3(x, y, 0);
 	}
 	

@@ -28,20 +28,23 @@ public class TileMovement : MonoBehaviour {
 
     void OnTriggerEnter2D(Collider2D col)
     {
-        if (col.gameObject.tag == "enemy")
-        {
-            //pick up tile
-            //stop at tile, pick it up, and then move
-            tag = "taken";
-            track = col.gameObject;
-            speed = track.GetComponent<EnemyMovement>().speed;
-            track.GetComponent<EnemyMovement>().hasTile = true;
-            GameObject.FindGameObjectWithTag("MainCamera").GetComponent<Main>().tiles = GameObject.FindGameObjectsWithTag("tile");
+        if (tag == "picked") {
+            if (col.gameObject.tag == "enemy")
+            {
+                //pick up tile
+                //stop at tile, pick it up, and then move
+                tag = "taken";
+                track = col.gameObject;
+                speed = track.GetComponent<EnemyMovement>().speed;
+                track.GetComponent<EnemyMovement>().hasTile = true;
+                GameObject.FindGameObjectWithTag("MainCamera").GetComponent<Main>().tiles = GameObject.FindGameObjectsWithTag("tile");
+            }
         }
     }
 
     void OnTriggerStay2D(Collider2D col)
     {
+
         if (col.gameObject.tag == "Player" && tileType != "permanent")
         {
             col.gameObject.GetComponent<PlayerMovement>().tile = gameObject;

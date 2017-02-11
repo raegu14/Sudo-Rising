@@ -13,19 +13,21 @@ public class PlayerMovement : MonoBehaviour {
     bool hasTile = false;
     float cooldown;
 
+    string xMove;
+    string yMove;
+
     string direction;
 
 	// Use this for initialization
 	void Start () {
-		
-	}
-	
-	// Update is called once per frame
-	void Update () {
-
-        GetComponent<SpriteRenderer>().sortingOrder = -Mathf.RoundToInt(transform.position.y * 100);
+        GetComponent<SpriteRenderer>().sortingOrder = 1000;
         transform.GetChild(0).GetComponent<SpriteRenderer>().sortingOrder = GetComponent<SpriteRenderer>().sortingOrder - 1;
+    }
 
+    // Update is called once per frame
+    void Update () {
+        
+        //reset weapons
         if (transform.GetChild(0).rotation != Quaternion.identity)
         {
             transform.GetChild(0).rotation = Quaternion.identity;
@@ -33,20 +35,31 @@ public class PlayerMovement : MonoBehaviour {
 
         if (player == 'A')
         {
-            if (Input.GetKey(KeyCode.W))
+            if (Input.GetKeyDown(KeyCode.W))
             {
                 transform.position += new Vector3(0, 1, 0) * Time.deltaTime * speed;
             }
+            if (Input.GetKeyDown(KeyCode.S))
+            {
+                transform.position += new Vector3(0, -1, 0) * Time.deltaTime * speed;
+            }
+
+            if (Input.GetKeyUp(KeyCode.W))
+            {
+            }
+            if (Input.GetKeyUp(KeyCode.S))
+            {
+            }
+
+
+
+
             if (Input.GetKey(KeyCode.A))
             {
                 direction = "left";
                 transform.position += new Vector3(-1, 0, 0) * Time.deltaTime * speed;
             }
-            if (Input.GetKey(KeyCode.S))
-            {
-                transform.position += new Vector3(0, -1, 0) * Time.deltaTime * speed;
-            }
-            if (Input.GetKey(KeyCode.D))
+            else if (Input.GetKey(KeyCode.D))
             {
                 direction = "right";
                 transform.position += new Vector3(1, 0, 0) * Time.deltaTime * speed;
@@ -64,7 +77,7 @@ public class PlayerMovement : MonoBehaviour {
                     transform.GetChild(0).Rotate(new Vector3(0, 0, -90));
                 }
             }
-            if (Input.GetKey(KeyCode.LeftShift))
+            if (Input.GetKey(KeyCode.E))
             {
                 //pick up item
                 if (inRange && tile != null && Time.time > cooldown + 1.0f)
@@ -101,16 +114,16 @@ public class PlayerMovement : MonoBehaviour {
             {
                 transform.position += new Vector3(0, 1, 0) * Time.deltaTime * speed;
             }
+            else if (Input.GetKey(KeyCode.DownArrow))
+            {
+                transform.position += new Vector3(0, -1, 0) * Time.deltaTime * speed;
+            }
             if (Input.GetKey(KeyCode.LeftArrow))
             {
                 direction = "left";
                 transform.position += new Vector3(-1, 0, 0) * Time.deltaTime * speed;
             }
-            if (Input.GetKey(KeyCode.DownArrow))
-            {
-                transform.position += new Vector3(0, -1, 0) * Time.deltaTime * speed;
-            }
-            if (Input.GetKey(KeyCode.RightArrow))
+            else if (Input.GetKey(KeyCode.RightArrow))
             {
                 direction = "right";
                 transform.position += new Vector3(1, 0, 0) * Time.deltaTime * speed;
