@@ -28,13 +28,15 @@ public class TileMovement : MonoBehaviour {
 
     void OnTriggerEnter2D(Collider2D col)
     {
-        if (tag == "picked") {
-            if (col.gameObject.tag == "enemy")
+        if (tag == "tile") {
+			EnemyMovement enemy = col.GetComponent<EnemyMovement>();
+            if (col.gameObject.tag == "enemy" && enemy.heldTile == null)
             {
                 //pick up tile
                 //stop at tile, pick it up, and then move
                 tag = "taken";
                 track = col.gameObject;
+				enemy.heldTile = this.gameObject;
                 speed = track.GetComponent<EnemyMovement>().speed;
                 track.GetComponent<EnemyMovement>().hasTile = true;
                 GameObject.FindGameObjectWithTag("MainCamera").GetComponent<Main>().tiles = GameObject.FindGameObjectsWithTag("tile");
@@ -45,7 +47,7 @@ public class TileMovement : MonoBehaviour {
     void OnTriggerStay2D(Collider2D col)
     {
 
-        if (col.gameObject.tag == "Player" && tileType != "permanent")
+        if (col.gameObject.tag == "Player" && gameObject.tag != "permanent")
         {
             col.gameObject.GetComponent<PlayerMovement>().tile = gameObject;
             col.gameObject.GetComponent<PlayerMovement>().inRange = true;
@@ -54,7 +56,7 @@ public class TileMovement : MonoBehaviour {
 
     void OnTriggerExit2D(Collider2D col)
     {
-        if (col.gameObject.tag == "Player" && tileType != "permanent")
+        if (col.gameObject.tag == "Player" && gameObject.tag != "permanent")
         {
             col.gameObject.GetComponent<PlayerMovement>().inRange = false;
         }
@@ -68,7 +70,7 @@ public class TileMovement : MonoBehaviour {
 		float ny = y;
 		
 		// Column
-		if(x < -2.45f){nx = x;col='Z';}
+		if(x < -2.45f){nx = x;col='0';}
 		else if(x < -1.81f){nx = -2.08f;col='A';}
 		else if(x < -1.29f){nx = -1.57f;col='B';}
 		else if(x < -0.78f){nx = -1.05f;col='C';}
@@ -78,10 +80,10 @@ public class TileMovement : MonoBehaviour {
 		else if(x < 1.32f){nx = 1.05f;col='G';}
 		else if(x < 1.85f){nx = 1.57f;col='H';}
 		else if(x < 2.36f){nx = 2.08f;col='I';}
-		else{nx = x;}
+		else{nx = x;col='0';}
 		
 		// Row
-		if(y < -0.05f){ny = y;}
+		if(y < -0.05f){ny = y;row=0;}
 		else if(y < 0.58){ny = 0.31f;row=9;}
 		else if(y < 1.09){ny = 0.82f;row=8;}
 		else if(y < 1.62){ny = 1.34f;row=7;}
@@ -98,39 +100,28 @@ public class TileMovement : MonoBehaviour {
 	
 	public void Check()
 	{
-		if(tileType == "permanent")
+		if(gameObject.tag == "permanent")
 			return;
 		Main main = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<Main>();
-		GameObject[] tiles = main.tiles;
-		bool check = true;
-		foreach (GameObject obj in tiles)
+		gameObject.tag = "tile";
+		if(col != '0' && row != 0)
 		{
-			TileMovement t = obj.GetComponent<TileMovement>();
-			if(this == t)
-				continue;
-			if(t.row == row && t.value == value 
-			|| t.col == col && t.value == value 
-			|| BoxFinder(this) == BoxFinder(t) && t.value == value)
+			if(main.solution[col-'A', row] == value)
 			{
-				check = false;
-				break;
+				main.setCount++;
 			}
-		}
-		if(check) // No conflicts
-		{
-			// Turn tile green
-			//transform.GetChild(0).GetComponent<TextMesh>().color = Color.green;
-			tileType = "set";
-			main.setCount++;
+			else
+			{
+				//TODO punishment for incorrect tile
+			}
 		}
 		else
 		{
-			//Turn tile red
-			//transform.GetChild(0).GetComponent<TextMesh>().color = Color.red;
-			tileType = "incorrect";
+			//Tile was dropped in an area that doesn't matter i guess
 		}
 	}
 	
+	/* DEPRECATED TODO REMOVE
 	bool RowCheck(TileMovement t, GameObject[] tiles)
 	{
 		Debug.Log(t.row);
@@ -194,4 +185,5 @@ public class TileMovement : MonoBehaviour {
 		}
 		return 0;
 	}
+	*/
 }

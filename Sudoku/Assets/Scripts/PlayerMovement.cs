@@ -13,8 +13,8 @@ public class PlayerMovement : MonoBehaviour {
     bool hasTile = false;
     float cooldown;
 
-    string xMove;
-    string yMove;
+    string xMove = "not moving";
+    string yMove = "not moving";
 
     string direction;
 
@@ -35,35 +35,116 @@ public class PlayerMovement : MonoBehaviour {
 
         if (player == 'A')
         {
-            if (Input.GetKeyDown(KeyCode.W))
+            //move vertically
+            if (yMove == "not moving")
             {
-                transform.position += new Vector3(0, 1, 0) * Time.deltaTime * speed;
-            }
-            if (Input.GetKeyDown(KeyCode.S))
-            {
-                transform.position += new Vector3(0, -1, 0) * Time.deltaTime * speed;
+                if (Input.GetKeyDown(KeyCode.W))
+                {
+                    yMove = "Up";
+                    transform.position += new Vector3(0, 1, 0) * Time.deltaTime * speed;
+                }
+                else if (Input.GetKeyDown(KeyCode.S))
+                {
+                    yMove = "Down";
+                    transform.position += new Vector3(0, -1, 0) * Time.deltaTime * speed;
+                }
             }
 
-            if (Input.GetKeyUp(KeyCode.W))
+            if(yMove == "Up")
             {
+                if (Input.GetKeyUp(KeyCode.W))
+                {
+                    if (Input.GetKey(KeyCode.S))
+                    {
+                        yMove = "Down";
+                        transform.position += new Vector3(0, -1, 0) * Time.deltaTime * speed;
+                    }
+                    else
+                    {
+                        yMove = "not moving";
+                    }
+                }
+                else
+                {
+                    transform.position += new Vector3(0, 1, 0) * Time.deltaTime * speed;
+                }
             }
-            if (Input.GetKeyUp(KeyCode.S))
+
+            if (yMove == "Down")
             {
+                if (Input.GetKeyUp(KeyCode.S))
+                {
+                    if (Input.GetKey(KeyCode.W))
+                    {
+                        yMove = "Up";
+                        transform.position += new Vector3(0, 1, 0) * Time.deltaTime * speed;
+                    }
+                    else
+                    {
+                        yMove = "not moving";
+                    }
+                }
+                else
+                {
+                    transform.position += new Vector3(0, -1, 0) * Time.deltaTime * speed;
+                }
             }
 
 
-
-
-            if (Input.GetKey(KeyCode.A))
+            if (xMove == "not moving")
             {
-                direction = "left";
-                transform.position += new Vector3(-1, 0, 0) * Time.deltaTime * speed;
+                if (Input.GetKeyDown(KeyCode.A))
+                {
+                    xMove = "Left";
+                    transform.position += new Vector3(-1, 0, 0) * Time.deltaTime * speed;
+                }
+                else if (Input.GetKeyDown(KeyCode.D))
+                {
+                    xMove = "Right";
+                    transform.position += new Vector3(1, 0, 0) * Time.deltaTime * speed;
+                }
             }
-            else if (Input.GetKey(KeyCode.D))
+
+            if (xMove == "Left")
             {
-                direction = "right";
-                transform.position += new Vector3(1, 0, 0) * Time.deltaTime * speed;
+                if (Input.GetKeyUp(KeyCode.A))
+                {
+                    if (Input.GetKey(KeyCode.D))
+                    {
+                        xMove = "Right";
+                        transform.position += new Vector3(1, 0, 0) * Time.deltaTime * speed;
+                    }
+                    else
+                    {
+                        xMove = "not moving";
+                    }
+                }
+                else
+                {
+                    transform.position += new Vector3(-1, 0, 0) * Time.deltaTime * speed;
+                }
             }
+
+            if (xMove == "Right")
+            {
+                if (Input.GetKeyUp(KeyCode.D))
+                {
+                    if (Input.GetKey(KeyCode.A))
+                    {
+                        xMove = "Left";
+                        transform.position += new Vector3(-1, 0, 0) * Time.deltaTime * speed;
+                    }
+                    else
+                    {
+                        xMove = "not moving";
+                    }
+                }
+                else
+                {
+                    transform.position += new Vector3(1, 0, 0) * Time.deltaTime * speed;
+                }
+            }
+
             if (Input.GetKey(KeyCode.Space))
             {
                 //play attack animation
@@ -84,14 +165,13 @@ public class PlayerMovement : MonoBehaviour {
                 {
 					if(!hasTile)
 					{
-						if(tile.GetComponent<TileMovement>().tileType != "permanent")
+						if(tile.tag != "permanent")
 						{
 							hasTile = true;
 							cooldown = Time.time;
 							tile.tag = "picked";
 							tile.GetComponent<TileMovement>().track = gameObject;
 							tile.GetComponent<TileMovement>().speed = speed;
-							tile.transform.GetChild(0).GetComponent<TextMesh>().color = Color.gray;
 						}
 					}
 					else
@@ -110,24 +190,116 @@ public class PlayerMovement : MonoBehaviour {
 
         else if (player == 'B')
         {
-            if (Input.GetKey(KeyCode.UpArrow))
+            //move vertically
+            if (yMove == "not moving")
             {
-                transform.position += new Vector3(0, 1, 0) * Time.deltaTime * speed;
+                if (Input.GetKeyDown(KeyCode.UpArrow))
+                {
+                    yMove = "Up";
+                    transform.position += new Vector3(0, 1, 0) * Time.deltaTime * speed;
+                }
+                else if (Input.GetKeyDown(KeyCode.DownArrow))
+                {
+                    yMove = "Down";
+                    transform.position += new Vector3(0, -1, 0) * Time.deltaTime * speed;
+                }
             }
-            else if (Input.GetKey(KeyCode.DownArrow))
+
+            if (yMove == "Up")
             {
-                transform.position += new Vector3(0, -1, 0) * Time.deltaTime * speed;
+                if (Input.GetKeyUp(KeyCode.UpArrow))
+                {
+                    if (Input.GetKey(KeyCode.DownArrow))
+                    {
+                        yMove = "Down";
+                        transform.position += new Vector3(0, -1, 0) * Time.deltaTime * speed;
+                    }
+                    else
+                    {
+                        yMove = "not moving";
+                    }
+                }
+                else
+                {
+                    transform.position += new Vector3(0, 1, 0) * Time.deltaTime * speed;
+                }
             }
-            if (Input.GetKey(KeyCode.LeftArrow))
+
+            if (yMove == "Down")
             {
-                direction = "left";
-                transform.position += new Vector3(-1, 0, 0) * Time.deltaTime * speed;
+                if (Input.GetKeyUp(KeyCode.DownArrow))
+                {
+                    if (Input.GetKey(KeyCode.UpArrow))
+                    {
+                        yMove = "Up";
+                        transform.position += new Vector3(0, 1, 0) * Time.deltaTime * speed;
+                    }
+                    else
+                    {
+                        yMove = "not moving";
+                    }
+                }
+                else
+                {
+                    transform.position += new Vector3(0, -1, 0) * Time.deltaTime * speed;
+                }
             }
-            else if (Input.GetKey(KeyCode.RightArrow))
+
+
+            if (xMove == "not moving")
             {
-                direction = "right";
-                transform.position += new Vector3(1, 0, 0) * Time.deltaTime * speed;
+                if (Input.GetKeyDown(KeyCode.LeftArrow))
+                {
+                    xMove = "Left";
+                    transform.position += new Vector3(-1, 0, 0) * Time.deltaTime * speed;
+                }
+                else if (Input.GetKeyDown(KeyCode.RightArrow))
+                {
+                    xMove = "Right";
+                    transform.position += new Vector3(1, 0, 0) * Time.deltaTime * speed;
+                }
             }
+
+            if (xMove == "Left")
+            {
+                if (Input.GetKeyUp(KeyCode.LeftArrow))
+                {
+                    if (Input.GetKey(KeyCode.RightArrow))
+                    {
+                        xMove = "Right";
+                        transform.position += new Vector3(1, 0, 0) * Time.deltaTime * speed;
+                    }
+                    else
+                    {
+                        xMove = "not moving";
+                    }
+                }
+                else
+                {
+                    transform.position += new Vector3(-1, 0, 0) * Time.deltaTime * speed;
+                }
+            }
+
+            if (xMove == "Right")
+            {
+                if (Input.GetKeyUp(KeyCode.RightArrow))
+                {
+                    if (Input.GetKey(KeyCode.LeftArrow))
+                    {
+                        xMove = "Left";
+                        transform.position += new Vector3(-1, 0, 0) * Time.deltaTime * speed;
+                    }
+                    else
+                    {
+                        xMove = "not moving";
+                    }
+                }
+                else
+                {
+                    transform.position += new Vector3(1, 0, 0) * Time.deltaTime * speed;
+                }
+            }
+
             if (Input.GetKey(KeyCode.RightControl))
             {
                 //attack
@@ -148,14 +320,13 @@ public class PlayerMovement : MonoBehaviour {
                 {
                     if (!hasTile)
                     {
-						if(tile.GetComponent<TileMovement>().tileType != "permanent")
+						if(tile.tag != "permanent")
 						{
 							hasTile = true;
 							cooldown = Time.time;
 							tile.tag = "picked";
 							tile.GetComponent<TileMovement>().track = gameObject;
 							tile.GetComponent<TileMovement>().speed = speed;
-							tile.transform.GetChild(0).GetComponent<TextMesh>().color = Color.gray;
 						}
                     }
                     else

@@ -16,8 +16,8 @@ public class Main : MonoBehaviour {
     float spawnTimer;
     float spawnRate = 2f;
 	
-	public int[] tileCounter = new int[10];
-	public int[,] solution = new int[10, 10];
+	public int[] tileCounter;
+	public int[,] solution;
     
     //timer to end game
     float timer = 500f;
@@ -29,16 +29,19 @@ public class Main : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
+		tileCounter  = new int[10];
+		solution = new int[10, 10];
         enemySpaces = GameObject.FindGameObjectsWithTag("enemyspawn");
-        tiles = GameObject.FindGameObjectsWithTag("picked");
+        tiles = GameObject.FindGameObjectsWithTag("tile");
         spawnTimer = Time.time;
         ReadLevel("board");
+		
 
     }
 
     // Update is called once per frame
     void Update () {
-        tiles = GameObject.FindGameObjectsWithTag("picked");
+        tiles = GameObject.FindGameObjectsWithTag("tile");
 
         if (timer < Time.time)
         {
@@ -89,7 +92,7 @@ public class Main : MonoBehaviour {
 					{
 						int val = int.Parse(coord[1]);
 						int row = int.Parse(firstRead[1].ToString());
-						if(coord[3] == "P")
+						if(coord[2] == "P")
 						{
 							SetTile(firstRead[0], row, val, "permanent");
 							tileCounter[val]++;
@@ -108,7 +111,7 @@ public class Main : MonoBehaviour {
 	{
 		GameObject tile = Instantiate(tilePrefab);
         tile.GetComponent<SpriteRenderer>().sprite = staticTile;
-		tile.GetComponent<TileMovement>().tileType = property;
+		tile.GetComponent<TileMovement>().tag = property;
 		float x, y;
 		switch(col)
 		{
@@ -191,7 +194,7 @@ public class Main : MonoBehaviour {
 	void SetTile(float x, float y, int val, string property)
 	{
 		GameObject tile = Instantiate(tilePrefab);
-		tile.GetComponent<TileMovement>().tileType = property;
+		tile.GetComponent<TileMovement>().tag = property;
 		
 		if(property == "permanent")
 			setCount++;

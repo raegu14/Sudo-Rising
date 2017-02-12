@@ -11,6 +11,7 @@ public class EnemyMovement : MonoBehaviour {
     GameObject closestTile;
 
     public bool hasTile;
+	public GameObject heldTile;
 
     bool death = false;
 
@@ -65,10 +66,12 @@ public class EnemyMovement : MonoBehaviour {
         if (col.collider.gameObject.tag == "weapon")
         {
             //tile stops moving
-            if (closestTile != null)
-            {
-                closestTile.GetComponent<TileMovement>().track = null;
-            }
+			if(heldTile != null)
+			{
+				heldTile.GetComponent<TileMovement>().track = null;
+				heldTile.tag = "tile";
+				heldTile = null;
+			}
             //enemy dies after 1 second, but loses rigidbody
             Destroy(GetComponent<Rigidbody2D>());
             death = true;
@@ -77,6 +80,7 @@ public class EnemyMovement : MonoBehaviour {
             StartCoroutine(deathAnim());
         }
     }
+	
 
     IEnumerator deathAnim()
     {
