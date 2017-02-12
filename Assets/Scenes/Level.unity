@@ -1986,8 +1986,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   enemySpaces: []
   enemies: []
-  enemy0: {fileID: 0}
-  enemy1: {fileID: 0}
+  enemy0: {fileID: 1884954868748570, guid: 2e755fbe69102264596e31f5d4b268c3, type: 2}
+  enemy1: {fileID: 1643490094395828, guid: b9fdcfc252c53134498913c1dc78a9e4, type: 2}
 --- !u!4 &731920613 stripped
 Transform:
   m_PrefabParentObject: {fileID: 4376940230029572, guid: 4667e262015007746b5f93da01704302,
@@ -2878,6 +2878,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1cac49e8d9cd44a4584fa2d9b8ad53ef, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  tilePrefab: {fileID: 0}
+  tileSpaces: []
+  tiles: []
+  tileCounter: 
+  spawnIndexCounter: 
 --- !u!1001 &1304406430
 Prefab:
   m_ObjectHideFlags: 0

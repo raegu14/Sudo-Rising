@@ -21,6 +21,8 @@ public class TileSpawn : MonoBehaviour {
     int aliveEnemyCount = 0;
     int minAliveEnemyCount = 9;
     int maxAliveEnemyCount = 13;
+	
+	int setCount = 0;
 
 
     // Use this for initialization
@@ -66,7 +68,8 @@ public class TileSpawn : MonoBehaviour {
 
 
 			int index = Random.Range(0, tileSpaces.Length);
-			StartCoroutine(tileSpawnAnim());
+			//StartCoroutine(tileSpawnAnim(index));
+			tileSpawnAnim(index);
 			activeTileCount++;
 		
 		}
@@ -101,9 +104,10 @@ public class TileSpawn : MonoBehaviour {
 		return;
 	}
 
-	IEnumerator tileSpawnAnim()
+	//IEnumerator tileSpawnAnim(int index)
+	void tileSpawnAnim(int index)
 	{
-		Instantiate(tiles, tileSpaces[index].transform.position, tileSpaces[index].transform.rotation);
+		Instantiate(tilePrefab, tileSpaces[index].transform.position, tileSpaces[index].transform.rotation);
 	}
 
 }
