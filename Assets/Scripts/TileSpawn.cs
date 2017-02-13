@@ -41,20 +41,23 @@ public class TileSpawn : MonoBehaviour {
 	void Update () {
 		tileSpaces = GameObject.FindGameObjectsWithTag("tilespawn");
 
-		/*if (main.getGameStatus() == Pregame) {
-			int tilesNeeded = Random.Range (minActiveTileCount, maxActiveTileCount);
-			for (int i = 1; i < 9; i++) {
-				if (tileCounter [i] == 0) {
-					int index = Random.Range (0, tileSpaces.Length);
-					tileSpaces[index].GetComponent<TileSpawn>().tag = unavailable;
-					Instantiate(tiles, tileSpaces[index].transform.position, tileSpaces[index].transform.rotation);
-					tileCounter[val]++;
+       /* if (main.getGameStatus() == Pregame)
+        {
+            int tilesNeeded = Random.Range(minActiveTileCount, maxActiveTileCount);
+            for (int i = 1; i < 9; i++)
+            {
+                if (tileCounter[i] == 0)
+                {
+                    int index = Random.Range(0, tileSpaces.Length);
+                    tileSpaces[index].GetComponent<TileSpawn>().tag = unavailable;
+                    Instantiate(tiles, tileSpaces[index].transform.position, tileSpaces[index].transform.rotation);
+                    tileCounter[val]++;
 
-				}
-					
-			}
-            */
+                }
 
+            }
+        }
+        */
 
 
 			//Loop through values tiles
