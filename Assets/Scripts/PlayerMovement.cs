@@ -16,7 +16,7 @@ public class PlayerMovement : MonoBehaviour {
     string xMove = "not moving";
     string yMove = "not moving";
 
-    string direction;
+    string direction = "";
 	private int speedTimer = 0, attackTimer = 0;
 	private bool speedPowerup = false, attackPowerup = false;
 
@@ -49,10 +49,8 @@ public class PlayerMovement : MonoBehaviour {
 		*/
         
         //reset weapons
-        if (transform.GetChild(0).rotation != Quaternion.identity)
-        {
-            transform.GetChild(0).rotation = Quaternion.identity;
-        }
+        transform.GetChild(0).rotation = Quaternion.identity;
+        transform.GetChild(0).gameObject.layer = 8;
 
         if (player == 'A')
         {
@@ -117,11 +115,13 @@ public class PlayerMovement : MonoBehaviour {
                 if (Input.GetKeyDown(KeyCode.A))
                 {
                     xMove = "Left";
+                    direction = "left";
                     transform.position += new Vector3(-1, 0, 0) * Time.deltaTime * speed;
                 }
                 else if (Input.GetKeyDown(KeyCode.D))
                 {
                     xMove = "Right";
+                    direction = "";
                     transform.position += new Vector3(1, 0, 0) * Time.deltaTime * speed;
                 }
             }
@@ -133,6 +133,7 @@ public class PlayerMovement : MonoBehaviour {
                     if (Input.GetKey(KeyCode.D))
                     {
                         xMove = "Right";
+                        direction = "";
                         transform.position += new Vector3(1, 0, 0) * Time.deltaTime * speed;
                     }
                     else
@@ -142,6 +143,7 @@ public class PlayerMovement : MonoBehaviour {
                 }
                 else
                 {
+                    direction = "left";
                     transform.position += new Vector3(-1, 0, 0) * Time.deltaTime * speed;
                 }
             }
@@ -152,6 +154,7 @@ public class PlayerMovement : MonoBehaviour {
                 {
                     if (Input.GetKey(KeyCode.A))
                     {
+                        direction = "left";
                         xMove = "Left";
                         transform.position += new Vector3(-1, 0, 0) * Time.deltaTime * speed;
                     }
@@ -162,15 +165,18 @@ public class PlayerMovement : MonoBehaviour {
                 }
                 else
                 {
+                    direction = "";
                     transform.position += new Vector3(1, 0, 0) * Time.deltaTime * speed;
                 }
             }
 
+            //attack
             if (Input.GetKey(KeyCode.Space))
             {
                 //play attack animation
                 transform.GetChild(0).GetComponent<Animation>().Play();
-                if(direction == "left")
+                transform.GetChild(0).gameObject.layer = 10;
+                if (direction == "left")
                 {
                     transform.GetChild(0).Rotate(new Vector3(0, 0, 90));
                 }
@@ -272,6 +278,7 @@ public class PlayerMovement : MonoBehaviour {
                 if (Input.GetKeyDown(KeyCode.LeftArrow))
                 {
                     xMove = "Left";
+                    direction = "left";
                     transform.position += new Vector3(-1, 0, 0) * Time.deltaTime * speed;
                 }
                 else if (Input.GetKeyDown(KeyCode.RightArrow))
@@ -288,6 +295,7 @@ public class PlayerMovement : MonoBehaviour {
                     if (Input.GetKey(KeyCode.RightArrow))
                     {
                         xMove = "Right";
+                        direction = "right";
                         transform.position += new Vector3(1, 0, 0) * Time.deltaTime * speed;
                     }
                     else
@@ -308,6 +316,7 @@ public class PlayerMovement : MonoBehaviour {
                     if (Input.GetKey(KeyCode.LeftArrow))
                     {
                         xMove = "Left";
+                        direction = "left";
                         transform.position += new Vector3(-1, 0, 0) * Time.deltaTime * speed;
                     }
                     else
@@ -321,10 +330,12 @@ public class PlayerMovement : MonoBehaviour {
                 }
             }
 
+            //attack
             if (Input.GetKey(KeyCode.RightControl))
             {
-                //attack
+                //play attack animation
                 transform.GetChild(0).GetComponent<Animation>().Play();
+                transform.GetChild(0).gameObject.layer = 10;
                 if (direction == "left")
                 {
                     transform.GetChild(0).Rotate(new Vector3(0, 0, 90));

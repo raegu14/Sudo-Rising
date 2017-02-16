@@ -29,7 +29,7 @@ public class TileSpawn : MonoBehaviour {
     void Start () {
         main = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<Main>();
 		tileSpaces = GameObject.FindGameObjectsWithTag("tilespawn");
-		tiles = GameObject.FindGameObjectsWithTag("tiles");
+		tiles = GameObject.FindGameObjectsWithTag("tile");
 
 		tileCounter  = new int[10];
 		spawnIndexCounter = new int[tileSpaces.Length];

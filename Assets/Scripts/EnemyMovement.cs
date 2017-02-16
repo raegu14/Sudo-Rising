@@ -64,6 +64,7 @@ public class EnemyMovement : MonoBehaviour {
 
     void OnCollisionEnter2D(Collision2D col)
     {
+        print(col.gameObject.tag);
         if (col.collider.gameObject.tag == "weapon")
         {
             //tile stops moving
