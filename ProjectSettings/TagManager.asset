@@ -12,6 +12,7 @@ TagManager:
   - enemyspawn
   - permanent
   - tilespawn
+  - unavailable
   layers:
   - Default
   - TransparentFX

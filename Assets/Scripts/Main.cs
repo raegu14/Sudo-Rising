@@ -18,7 +18,9 @@ public class Main : MonoBehaviour {
 	
 	public int[] tileCounter;
 	public int[,] solution;
-    
+
+    string gameStatus;
+
     //timer to end game
     float timer = 500f;
     
@@ -35,7 +37,7 @@ public class Main : MonoBehaviour {
         tiles = GameObject.FindGameObjectsWithTag("tile");
         spawnTimer = Time.time;
         ReadLevel("board");
-		
+        gameStatus = "Pregame";
 
     }
 
@@ -205,5 +207,9 @@ public class Main : MonoBehaviour {
 		tile.transform.position = new Vector3(x, y, 0);
 	}
 	
+    public string getGameStatus()
+    {
+        return gameStatus;
+    }
 
 }
