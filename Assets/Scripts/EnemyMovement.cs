@@ -16,10 +16,12 @@ public class EnemyMovement : MonoBehaviour {
 	EnemySpawn enemySpawn;
 
     bool death = false;
+    Animator anim;
 
 	// Use this for initialization
 	void Start ()
     {
+        anim = GetComponent<Animator>();
 		enemySpawn = GameObject.Find("EnemySpawnPoints").GetComponent<EnemySpawn>();
         //find closest tile and set direction to it
         tiles = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<Main>().tiles;
@@ -58,7 +60,16 @@ public class EnemyMovement : MonoBehaviour {
                 }
             }
         }
-
+        if (direction.x < 0)
+        {
+            //left
+            anim.SetBool("Left", true);
+        }
+        else
+        {
+            //right
+            anim.SetBool("Left", false);
+        }
         transform.position += direction.normalized * speed * Time.deltaTime;
     }
 
