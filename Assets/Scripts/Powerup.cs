@@ -5,7 +5,7 @@ using UnityEngine;
 public class Powerup : MonoBehaviour {
 	
 	private string powerType = "speed";
-	private float multiplier = 1.25f;
+	public float multiplier = 2.0f;
 
 	// Use this for initialization
 	void Start () {

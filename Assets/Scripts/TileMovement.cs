@@ -10,14 +10,24 @@ public class TileMovement : MonoBehaviour {
 	public int value;
 	public char col;
 	public int row;
+	public int spawn;
+	private TileSpawn spawnner;
+	private Main main;
+	
+	public AudioSource audio;
+	public AudioClip rightSound;
+	public AudioClip wrongSound;
 
     // Use this for initialization
     void Start() {
+		spawnner = GameObject.Find("TileSpawnPoints").GetComponent<TileSpawn>();
+		main = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<Main>();
     }
 
     // Update is called once per frame
     void Update() {
-        GetComponent<SpriteRenderer>().sortingOrder = -Mathf.RoundToInt(transform.position.y * 100) - 10;
+		if(gameObject.tag != "permanent")
+			GetComponent<SpriteRenderer>().sortingOrder = -Mathf.RoundToInt(transform.position.y * 100) - 10;
         GetComponentInChildren<MeshRenderer>().sortingOrder = GetComponent<SpriteRenderer>().sortingOrder + 1;
 
         if (track != null)
@@ -28,20 +38,24 @@ public class TileMovement : MonoBehaviour {
 
     void OnTriggerEnter2D(Collider2D col)
     {
-        if (tag == "tile") {
+        if (tag == "set") {
 			EnemyMovement enemy = col.GetComponent<EnemyMovement>();
             if (col.gameObject.tag == "enemy" && enemy.heldTile == null)
             {
                 //pick up tile
-                //stop at tile, pick it up, and then move
                 tag = "taken";
                 track = col.gameObject;
 				enemy.heldTile = this.gameObject;
                 speed = track.GetComponent<EnemyMovement>().speed;
                 track.GetComponent<EnemyMovement>().hasTile = true;
-                GameObject.FindGameObjectWithTag("MainCamera").GetComponent<Main>().tiles = GameObject.FindGameObjectsWithTag("tile");
+                main.tiles = GameObject.FindGameObjectsWithTag("tile");
             }
         }
+		if (col.tag == "wall")
+		{
+			Despawn();
+		}
+		UpdateSpawn(spawn);
     }
 
     void OnTriggerStay2D(Collider2D col)
@@ -52,6 +66,7 @@ public class TileMovement : MonoBehaviour {
             col.gameObject.GetComponent<PlayerMovement>().tile = gameObject;
             col.gameObject.GetComponent<PlayerMovement>().inRange = true;
         }
+		UpdateSpawn(spawn);
     }
 
     void OnTriggerExit2D(Collider2D col)
@@ -60,9 +75,10 @@ public class TileMovement : MonoBehaviour {
         {
             col.gameObject.GetComponent<PlayerMovement>().inRange = false;
         }
+		UpdateSpawn(spawn);
     }
 	
-	public void Snap() //Snap to closest location
+	public bool Snap() //Snap to closest location
 	{
 		float x = transform.position.x;
 		float y = transform.position.y;
@@ -94,7 +110,10 @@ public class TileMovement : MonoBehaviour {
 		else if(y < 4.22){ny = 3.94f;row=2;}
 		else if(y < 4.73){ny = 4.46f;row=1;}
 		else{ny = y;row=0;}
+		if(main.noSnap[col - 'A', row])
+			return false;
 		transform.position = new Vector3(nx, ny, 0);
+		return true;
 		
 	}
 	
@@ -102,17 +121,20 @@ public class TileMovement : MonoBehaviour {
 	{
 		if(gameObject.tag == "permanent")
 			return;
-		Main main = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<Main>();
 		gameObject.tag = "tile";
 		if(col != '0' && row != 0)
 		{
 			if(main.solution[col-'A', row] == value)
 			{
-				main.setCount++;
+				gameObject.tag = "set";
+				audio.clip = rightSound;
+				audio.Play();
 			}
 			else
 			{
-				//TODO punishment for incorrect tile
+				audio.clip = wrongSound;
+				audio.Play();
+				main.lives--;
 			}
 		}
 		else
@@ -121,69 +143,18 @@ public class TileMovement : MonoBehaviour {
 		}
 	}
 	
-	/* DEPRECATED TODO REMOVE
-	bool RowCheck(TileMovement t, GameObject[] tiles)
+	public void Despawn()
 	{
-		Debug.Log(t.row);
-			Debug.Log("begin check");
-		foreach (GameObject obj in tiles)
-		{
-			TileMovement other = obj.GetComponent<TileMovement>();
-			
-			Debug.Log(other.row);
-			if(other != t && other.row == t.row && other.value == t.value)
-				return false;
-		}
-		return true;
+		Debug.Log("lol");
+		spawnner.tileCounter[value]--;
+		Destroy(this.gameObject);
 	}
-	bool ColCheck(TileMovement t, GameObject[] tiles)
+	public void UpdateSpawn(int index)
 	{
-		foreach (GameObject obj in tiles)
+		if(spawn >= 0)
 		{
-			TileMovement other = obj.GetComponent<TileMovement>();
-			if(other != t && other.col == t.col && other.value == t.value)
-				return false;
+			spawnner.spawnIndexMarker[index] = false;
+			spawn = -1;
 		}
-		return true;
 	}
-	bool BoxCheck(TileMovement t, GameObject[] tiles)
-	{
-		foreach (GameObject obj in tiles)
-		{
-			TileMovement other = obj.GetComponent<TileMovement>();
-			if(other != t && BoxFinder(t) == BoxFinder(other) && t.value == other.value)
-				return false;
-		}
-		return true;
-	}
-	int BoxFinder(TileMovement t)
-	{
-		// May need to be more strict aout rows 
-		if(t.col == 'A' || t.col == 'B' || t.col == 'C') 
-		{
-			if(t.row < 4)
-				return 1;
-			if(t.row < 7)
-				return 4;
-			return 7;
-		}
-		else if(t.col == 'D' || t.col == 'E' || t.col == 'F')
-		{
-			if(t.row < 4)
-				return 2;
-			if(t.row < 7)
-				return 5;
-			return 8;
-		}
-		else if(t.col == 'G' || t.col == 'H' || t.col == 'I')
-		{
-			if(t.row < 4)
-				return 3;
-			if(t.row < 7)
-				return 6;
-			return 9;
-		}
-		return 0;
-	}
-	*/
 }

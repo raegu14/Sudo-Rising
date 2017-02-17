@@ -13,6 +13,8 @@ TagManager:
   - permanent
   - tilespawn
   - unavailable
+  - wall
+  - set
   layers:
   - Default
   - TransparentFX
@@ -24,10 +26,10 @@ TagManager:
   - 
   - Player
   - Enemy
-  - Weapon
-  - 
-  - 
-  - 
+  - WeaponON
+  - Wall
+  - WeaponOFF
+  - Impenatrable
   - 
   - 
   - 

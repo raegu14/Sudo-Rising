@@ -24,7 +24,7 @@ public class EnemyMovement : MonoBehaviour {
         anim = GetComponent<Animator>();
 		enemySpawn = GameObject.Find("EnemySpawnPoints").GetComponent<EnemySpawn>();
         //find closest tile and set direction to it
-        tiles = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<Main>().tiles;
+        tiles = GameObject.FindGameObjectsWithTag("set");
         if (tiles.Length > 0)
         {
             closestTile = tiles[0];
@@ -40,12 +40,12 @@ public class EnemyMovement : MonoBehaviour {
 	void Update () {
         if (hasTile)
         {
-            //go offscreen
+            direction = new Vector3(-1, -1, 0).normalized;
         }
         else if (!death)
         {
             //find closest tile and set direction to it
-            tiles = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<Main>().tiles;
+            tiles = GameObject.FindGameObjectsWithTag("set");
             if (tiles.Length > 0)
             {
                 closestTile = tiles[0];
@@ -60,46 +60,49 @@ public class EnemyMovement : MonoBehaviour {
                 }
             }
         }
-        if (direction.x < 0)
+        else
         {
-            //left
+            anim.SetBool("Died", true);
+        }
+        if (direction.x < 0)
+        { 
             anim.SetBool("Left", true);
         }
         else
         {
-            //right
             anim.SetBool("Left", false);
         }
         transform.position += direction.normalized * speed * Time.deltaTime;
     }
 
-    void OnCollisionEnter2D(Collision2D col)
-    {
-        if (col.collider.gameObject.tag == "weapon")
-        {
-            //tile stops moving
-			if(heldTile != null)
-			{
-				heldTile.GetComponent<TileMovement>().track = null;
-				heldTile.tag = "tile";
-				heldTile = null;
-			}
-            //enemy dies after 1 second, but loses rigidbody
-            Destroy(GetComponent<Rigidbody2D>());
-            death = true;
+	
+	public void die()
+	{
+		//tile stops moving
+		if(heldTile != null)
+		{
+			heldTile.GetComponent<TileMovement>().track = null;
+			heldTile.tag = "tile";
+			heldTile = null;
+		}
+		//enemy dies after 1 second, but loses rigidbody
+		Destroy(GetComponent<Rigidbody2D>());
+		death = true;
 
-			//reduce enemy count
-			enemySpawn.reduceEnemyCount(1);
+		//reduce enemy count
+		enemySpawn.reduceEnemyCount(1);
 
-            direction = new Vector3();
-            //play death animation
-            StartCoroutine(deathAnim());
-        }
-    }
+		direction = new Vector3();
+		//play death animation
+		StartCoroutine(deathAnim());
+	}
 	
 
     IEnumerator deathAnim()
     {
+        GetComponent<AudioSource>().Play();
+        anim.SetBool("Died", true);
+        transform.localScale *= 1.35f;
         yield return new WaitForSeconds(1);
         Destroy(gameObject);
     }

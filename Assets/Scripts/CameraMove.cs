@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class CameraMove : MonoBehaviour {
 
@@ -46,6 +47,14 @@ public class CameraMove : MonoBehaviour {
             prevSize = camSize;
             prevX = camX;
             prevY = camY;
+        }
+        print(counter);
+        if (counter >= 7)
+        {
+            if (Input.GetKey(KeyCode.Space))
+            {
+                SceneManager.LoadScene("Level");
+            }
         }
     }
 

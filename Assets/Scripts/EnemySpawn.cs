@@ -4,6 +4,11 @@ using UnityEngine;
 
 public class EnemySpawn : MonoBehaviour {
 
+    public AudioClip normal;
+    public AudioClip fast;
+    private AudioSource aud;
+    private bool normalSpeed = true;
+
 	public GameObject[] enemySpaces;
 	public GameObject[] enemies;
 	public GameObject enemy0;
@@ -15,6 +20,7 @@ public class EnemySpawn : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
+        aud = GetComponent<AudioSource>();
 		enemySpaces = GameObject.FindGameObjectsWithTag("enemyspawn");
 		spawnTimer = Time.time;
 		enemies = new GameObject[2];
@@ -28,7 +34,7 @@ public class EnemySpawn : MonoBehaviour {
 		//Periodic Spawn with Enemy Max and small Random component
 		if(spawnTimer + spawnRate < Time.time 
 			&& aliveEnemyCount<maxAliveEnemyCount
-			&& Random.Range(0,100) < 90)
+			&& Random.Range(0,100) < 70)
 		{
 			spawnTimer = Time.time;
 			int index = Random.Range(0, 20);
@@ -36,7 +42,29 @@ public class EnemySpawn : MonoBehaviour {
 			Instantiate(enemies[enemyType], enemySpaces[index].transform.position, enemySpaces[index].transform.rotation);
 			aliveEnemyCount++;
 		}
-	}
+
+        if(aliveEnemyCount > maxAliveEnemyCount)
+        {
+            if (normalSpeed)
+            {
+                normalSpeed = false;
+                aud.clip = fast;
+                aud.Play();
+                aud.loop = true;
+            }
+        }
+
+        if(aliveEnemyCount <= maxAliveEnemyCount / 2)
+        {
+            if (!normalSpeed)
+            {
+                normalSpeed = true;
+                aud.clip = normal;
+                aud.Play();
+                aud.loop = true;
+            }
+        }
+    }
 
 
 	public int getEnemyCount() {

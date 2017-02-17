@@ -12,7 +12,7 @@ public class TileSpawn : MonoBehaviour {
     Main main;
 
 	public int[] tileCounter;
-	public int[] spawnIndexCounter;
+	public bool[] spawnIndexMarker;
 
 	int activeTileCount = 0;
 	int minActiveTileCount = 9;
@@ -32,27 +32,29 @@ public class TileSpawn : MonoBehaviour {
 		tiles = GameObject.FindGameObjectsWithTag("tile");
 
 		tileCounter  = new int[10];
-		spawnIndexCounter = new int[tileSpaces.Length];
-
-
+		spawnIndexMarker = new bool[tileSpaces.Length];
 	}
 
 	// Update is called once per frame
 	void Update () {
-		tileSpaces = GameObject.FindGameObjectsWithTag("tilespawn");
+		tiles = GameObject.FindGameObjectsWithTag("tile");
+		activeTileCount = tiles.Length;
 
-        if (main.getGameStatus() == "Pregame")
+        if (main.getGameStatus() == "Pregame" && activeTileCount < minActiveTileCount)
         {
-            int tilesNeeded = Random.Range(minActiveTileCount, maxActiveTileCount);
-            for (int i = 1; i < 9; i++)
+            for (int i = 1; i < 10; i++)
             {
-                if (tileCounter[i] == 0)
+                if (tileCounter[i] < 10 && activeTileCount < maxActiveTileCount)
                 {
                     int index = Random.Range(0, tileSpaces.Length);
-                    print(index);
-                    //tileSpaces[index].tag = "unavailable";
-                    Instantiate(tiles[tilesNeeded], tileSpaces[index].transform.position, tileSpaces[index].transform.rotation);
-                    tileCounter[i]++;
+					if(!spawnIndexMarker[index])
+					{
+						spawnIndexMarker[index] = true;
+						Vector3 loc = tileSpaces[index].transform.position;
+						SetTile(loc.x, loc.y, i, "tile", index);
+						tileCounter[i]++;
+						activeTileCount++;
+					}
                 }
 
             }
@@ -79,10 +81,11 @@ public class TileSpawn : MonoBehaviour {
 
 	}
 
-	void SetTile(float x, float y, int val, string property)
+	void SetTile(float x, float y, int val, string property, int spawnIndex)
 	{
 		GameObject tile = Instantiate(tilePrefab);
 		tile.GetComponent<TileMovement>().tag = property;
+		tile.GetComponent<TileMovement>().spawn = spawnIndex;
 
 		if(property == "permanent")
 			setCount++;

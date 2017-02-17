@@ -9,7 +9,6 @@ public class Main : MonoBehaviour {
 
     public GameObject[] tiles;
 	public GameObject tilePrefab;
-	public int setCount;
 
     public GameObject[] enemySpaces;
     public GameObject[] enemies;
@@ -18,13 +17,20 @@ public class Main : MonoBehaviour {
 	
 	public int[] tileCounter;
 	public int[,] solution;
+	public bool[,] noSnap;
+	
+	public int lives = 5;
 
     string gameStatus;
 
     //timer to end game
     float timer = 500f;
-    
-    // week 2, ranged combat to end game
+	
+	private int setTiles = 0;
+	
+	// UI
+	public TextMesh livesUI;
+	public TextMesh countUI;
 	
 	
 	
@@ -33,6 +39,7 @@ public class Main : MonoBehaviour {
 	void Start () {
 		tileCounter  = new int[10];
 		solution = new int[10, 10];
+		noSnap = new bool[10, 10];
         enemySpaces = GameObject.FindGameObjectsWithTag("enemyspawn");
         tiles = GameObject.FindGameObjectsWithTag("tile");
         spawnTimer = Time.time;
@@ -43,26 +50,36 @@ public class Main : MonoBehaviour {
 
     // Update is called once per frame
     void Update () {
-        tiles = GameObject.FindGameObjectsWithTag("tile");
-
-        if (timer < Time.time)
-        {
-            print("gameOver");
-        }
-		if(setCount == 81)
+		if(gameStatus == "GameOver")
+		{
+			print("gameover");
+		}
+		else if(gameStatus == "Winner")
 		{
 			print("winner");
 		}
+		int setCount = GameObject.FindGameObjectsWithTag("set").Length;
+        tiles = GameObject.FindGameObjectsWithTag("tile");
+		livesUI.text = "Lives " + lives;
+		countUI.text = setCount + " Correct";
+
+        if (lives < 1)
+        {
+            gameStatus = "GameOver";
+        }
 
         if(spawnTimer + spawnRate < Time.time)
         {
             spawnTimer = Time.time;
             int index = Random.Range(0, 20);
             int enemyType = Random.Range(0, 2);
-            Instantiate(enemies[enemyType], enemySpaces[index].transform.position, enemySpaces[index].transform.rotation);
         }
 		
-		// TODO spawn tiles
+		if(setCount + setTiles == 81)
+		{
+			gameStatus = "Winner";
+		}
+		
 		
 	}
 	void ReadLevel(string fileName) 
@@ -97,9 +114,12 @@ public class Main : MonoBehaviour {
 						if(coord[2] == "P")
 						{
 							SetTile(firstRead[0], row, val, "permanent");
+							setTiles++;
 							tileCounter[val]++;
+							noSnap[firstRead[0] - 'A', row] = true;
 						}
 						solution[firstRead[0] - 'A', row] = val;
+						
 					}
 				}
 				line = reader.ReadLine();
@@ -183,13 +203,13 @@ public class Main : MonoBehaviour {
 				Debug.Log("what the heck is this row??");
 				break;
 		}
-		if(property == "permanent")
-			setCount++;
 		tile.transform.GetChild(0).transform.GetComponent<TextMesh>().text = val.ToString();
 		tile.GetComponent<TileMovement>().value = val;
 		tile.GetComponent<TileMovement>().col = col;
 		tile.GetComponent<TileMovement>().row = row;
 		tile.transform.position = new Vector3(x, y, 0);
+		if(property == "permanent")
+			 tile.GetComponent<Renderer>().sortingOrder = -600;
 	}
 	
 	// Set tile at specified coordinates
@@ -198,8 +218,6 @@ public class Main : MonoBehaviour {
 		GameObject tile = Instantiate(tilePrefab);
 		tile.GetComponent<TileMovement>().tag = property;
 		
-		if(property == "permanent")
-			setCount++;
 		tile.transform.GetChild(0).transform.GetComponent<TextMesh>().text = val.ToString();
 		tile.GetComponent<TileMovement>().value = val;
 		tile.GetComponent<TileMovement>().col = '0';

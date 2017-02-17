@@ -68,6 +68,12 @@ public class PlayerMovement : MonoBehaviour {
 		else if(!speedPowerup)
 		{
 			speed = 2.0f;
+			if(tile != null)
+				tile.GetComponent<TileMovement>().speed = speed;
+		}
+		else
+		{
+			speedPowerup = false;
 		}
 		/* STUB FOR ATTACK POWERUPS
 		if(attackTimer > 0)
@@ -82,7 +88,7 @@ public class PlayerMovement : MonoBehaviour {
         
         //reset weapons
         transform.GetChild(0).rotation = Quaternion.identity;
-        transform.GetChild(0).gameObject.layer = 8;
+        transform.GetChild(0).gameObject.layer = 12;
 
         //move vertically
         if (yMove == "not moving")
@@ -197,46 +203,57 @@ public class PlayerMovement : MonoBehaviour {
                 transform.position += new Vector3(1, 0, 0) * Time.deltaTime * speed;
             }
         }
-        if (xMove == "not moving" && yMove == "not moving")
-        {
-            anim.SetBool("MovingRight", false);
-            anim.SetBool("MovingLeft", false);
-            anim.enabled = false;
-            if(direction == "MovingLeft")
-            {
-                GetComponent<SpriteRenderer>().sprite = leftMove;
-            }
-            else
-            {
-                GetComponent<SpriteRenderer>().sprite = rightMove;
-            }
-        }
-        else if (direction == "MovingLeft")
-        {
-            anim.enabled = true;
-            anim.SetBool("MovingRight", false);
-            anim.SetBool("MovingLeft", true);
-        }
-        else if (direction == "MovingRight")
-        {
-            anim.enabled = true;
-            anim.SetBool("MovingRight", true);
-            anim.SetBool("MovingLeft", false);
-        }
 
-        //attack
         if (Input.GetKey(Attack))
         {
             //play attack animation
-            transform.GetChild(0).GetComponent<Animation>().Play();
+            anim.SetBool("MovingLeft", false);
+            anim.SetBool("MovingRight", false);
             transform.GetChild(0).gameObject.layer = 10;
             if (direction == "MovingLeft")
             {
+                anim.SetTrigger("AttackLeft");
+                anim.SetBool("Move", false);
+                StartCoroutine(paused());
                 transform.GetChild(0).Rotate(new Vector3(0, 0, 90));
             }
             else
             {
+                anim.SetTrigger("AttackRight");
+                anim.SetBool("Move", false);
+                StartCoroutine(paused());
                 transform.GetChild(0).Rotate(new Vector3(0, 0, -90));
+            }
+        }
+
+        else
+        {
+            anim.SetBool("Move", true);
+            if (xMove == "not moving" && yMove == "not moving")
+            {
+                anim.SetBool("MovingRight", false);
+                anim.SetBool("MovingLeft", false);
+                anim.enabled = false;
+                if (direction == "MovingLeft")
+                {
+                    GetComponent<SpriteRenderer>().sprite = leftMove;
+                }
+                else
+                {
+                    GetComponent<SpriteRenderer>().sprite = rightMove;
+                }
+            }
+            else if (direction == "MovingLeft")
+            {
+                anim.enabled = true;
+                anim.SetBool("MovingRight", false);
+                anim.SetBool("MovingLeft", true);
+            }
+            else if (direction == "MovingRight")
+            {
+                anim.enabled = true;
+                anim.SetBool("MovingRight", true);
+                anim.SetBool("MovingLeft", false);
             }
         }
 
@@ -262,8 +279,8 @@ public class PlayerMovement : MonoBehaviour {
                     cooldown = Time.time;
                     tile.GetComponent<TileMovement>().track = null;
                     tile.GetComponent<TileMovement>().speed = 0;
-                    tile.GetComponent<TileMovement>().Snap();
-                    tile.GetComponent<TileMovement>().Check();
+                    if(tile.GetComponent<TileMovement>().Snap())
+						tile.GetComponent<TileMovement>().Check();
                     tile = null;
                 }
             }    
@@ -275,7 +292,9 @@ public class PlayerMovement : MonoBehaviour {
 		if(pType == "speed")
 		{
 			speed *= multiplier;
-			speedTimer = 1000;
+			if(tile != null)
+				tile.GetComponent<TileMovement>().speed = speed;
+			speedTimer = 100;
 			speedPowerup = true;
 		}
 		// TODO add other powerups
@@ -290,5 +309,10 @@ public class PlayerMovement : MonoBehaviour {
             GameObject.FindGameObjectWithTag("MainCamera").GetComponent<Main>().tiles = GameObject.FindGameObjectsWithTag("tile");
 			// TODO add tile row/column reclassing
         }
+    }
+
+    private IEnumerator paused()
+    {
+        yield return new WaitForSeconds(1f);
     }
 }
