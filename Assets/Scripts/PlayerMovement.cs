@@ -14,7 +14,7 @@ public class PlayerMovement : MonoBehaviour {
     public Sprite rightMove;
     private Animator anim;
 
-    bool hasTile = false;
+    public bool hasTile = false;
     float cooldown;
 
     string xMove = "not moving";
@@ -203,8 +203,33 @@ public class PlayerMovement : MonoBehaviour {
                 transform.position += new Vector3(1, 0, 0) * Time.deltaTime * speed;
             }
         }
+       
+        if (Input.GetKeyDown(PickUp))
+        {
+            //pick up item
+            if (tile != null && !hasTile && inRange)
+            {
+                if (tile.tag != "permanent")
+                {
+                    hasTile = true;
+                    tile.tag = "picked";
+                    tile.GetComponent<TileMovement>().track = gameObject;
+                    tile.GetComponent<TileMovement>().speed = speed;
+                }
+            }
+            else if (hasTile)
+            {
+                hasTile = false;
+                tile.GetComponent<TileMovement>().track = null;
+                tile.GetComponent<TileMovement>().speed = 0;
+                tile.transform.position = transform.position;
+                if (tile.GetComponent<TileMovement>().Snap())
+                    tile.GetComponent<TileMovement>().Check();
+                tile = null;
+            }
+        }
 
-        if (Input.GetKey(Attack))
+        if (Input.GetKey(Attack) && !hasTile)
         {
             //play attack animation
             anim.SetBool("MovingLeft", false);
@@ -255,35 +280,6 @@ public class PlayerMovement : MonoBehaviour {
                 anim.SetBool("MovingRight", true);
                 anim.SetBool("MovingLeft", false);
             }
-        }
-
-        if (Input.GetKey(PickUp)) {
-
-            //pick up item
-            if (inRange && tile != null && Time.time > cooldown + 1.0f)
-            {
-                if (!hasTile)
-                {
-                    if (tile.tag != "permanent")
-                    {
-                        hasTile = true;
-                        cooldown = Time.time;
-                        tile.tag = "picked";
-                        tile.GetComponent<TileMovement>().track = gameObject;
-                        tile.GetComponent<TileMovement>().speed = speed;
-                    }
-                }
-                else
-                {
-                    hasTile = false;
-                    cooldown = Time.time;
-                    tile.GetComponent<TileMovement>().track = null;
-                    tile.GetComponent<TileMovement>().speed = 0;
-                    if(tile.GetComponent<TileMovement>().Snap())
-						tile.GetComponent<TileMovement>().Check();
-                    tile = null;
-                }
-            }    
         }
     }
 	

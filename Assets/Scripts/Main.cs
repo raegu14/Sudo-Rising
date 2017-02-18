@@ -26,7 +26,7 @@ public class Main : MonoBehaviour {
     //timer to end game
     float timer = 500f;
 	
-	private int setTiles = 0;
+	public int setTiles = 0;
 	
 	// UI
 	public TextMesh livesUI;

@@ -23,6 +23,8 @@ public class TileSpawn : MonoBehaviour {
     int maxAliveEnemyCount = 13;
 	
 	int setCount = 0;
+	int limit = 10;
+	int totalSpawns;
 
 
     // Use this for initialization
@@ -30,6 +32,7 @@ public class TileSpawn : MonoBehaviour {
         main = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<Main>();
 		tileSpaces = GameObject.FindGameObjectsWithTag("tilespawn");
 		tiles = GameObject.FindGameObjectsWithTag("tile");
+		totalSpawns = main.setTiles;
 
 		tileCounter  = new int[10];
 		spawnIndexMarker = new bool[tileSpaces.Length];
@@ -39,12 +42,15 @@ public class TileSpawn : MonoBehaviour {
 	void Update () {
 		tiles = GameObject.FindGameObjectsWithTag("tile");
 		activeTileCount = tiles.Length;
+		
+		if(limit*4 < totalSpawns)
+			limit *= 2;
 
         if (main.getGameStatus() == "Pregame" && activeTileCount < minActiveTileCount)
         {
             for (int i = 1; i < 10; i++)
             {
-                if (tileCounter[i] < 10 && activeTileCount < maxActiveTileCount)
+                if (tileCounter[i] < limit && activeTileCount < maxActiveTileCount)
                 {
                     int index = Random.Range(0, tileSpaces.Length);
 					if(!spawnIndexMarker[index])
@@ -54,17 +60,12 @@ public class TileSpawn : MonoBehaviour {
 						SetTile(loc.x, loc.y, i, "tile", index);
 						tileCounter[i]++;
 						activeTileCount++;
+						totalSpawns++;
 					}
                 }
 
             }
         }
-        
-
-
-			//Loop through values tiles
-			//Select random spawn location that hasn't been used
-			//Animate
     }
 
 

@@ -17,11 +17,14 @@ public class TileMovement : MonoBehaviour {
 	public AudioSource audio;
 	public AudioClip rightSound;
 	public AudioClip wrongSound;
+	
+	private Vector3 offset;
 
     // Use this for initialization
     void Start() {
 		spawnner = GameObject.Find("TileSpawnPoints").GetComponent<TileSpawn>();
 		main = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<Main>();
+		offset = new Vector3(0, 0.8f, 0);
     }
 
     // Update is called once per frame
@@ -32,7 +35,7 @@ public class TileMovement : MonoBehaviour {
 
         if (track != null)
         {
-            transform.position += (track.transform.position - transform.position).normalized * Time.deltaTime * speed;
+            transform.position = (track.transform.position + offset);
         }
     }
 
@@ -51,10 +54,6 @@ public class TileMovement : MonoBehaviour {
                 main.tiles = GameObject.FindGameObjectsWithTag("tile");
             }
         }
-		if (col.tag == "wall")
-		{
-			Despawn();
-		}
 		UpdateSpawn(spawn);
     }
 
@@ -63,8 +62,11 @@ public class TileMovement : MonoBehaviour {
 
         if (col.gameObject.tag == "Player" && gameObject.tag != "permanent")
         {
-            col.gameObject.GetComponent<PlayerMovement>().tile = gameObject;
-            col.gameObject.GetComponent<PlayerMovement>().inRange = true;
+            if (!col.gameObject.GetComponent<PlayerMovement>().hasTile)
+            {
+                col.gameObject.GetComponent<PlayerMovement>().tile = gameObject;
+                col.gameObject.GetComponent<PlayerMovement>().inRange = true;
+            }
         }
 		UpdateSpawn(spawn);
     }
@@ -145,7 +147,6 @@ public class TileMovement : MonoBehaviour {
 	
 	public void Despawn()
 	{
-		Debug.Log("lol");
 		spawnner.tileCounter[value]--;
 		Destroy(this.gameObject);
 	}

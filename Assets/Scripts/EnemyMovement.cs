@@ -17,6 +17,7 @@ public class EnemyMovement : MonoBehaviour {
 
     bool death = false;
     Animator anim;
+	
 
 	// Use this for initialization
 	void Start ()
@@ -106,4 +107,5 @@ public class EnemyMovement : MonoBehaviour {
         yield return new WaitForSeconds(1);
         Destroy(gameObject);
     }
+	
 }
