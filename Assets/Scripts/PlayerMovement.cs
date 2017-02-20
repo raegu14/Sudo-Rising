@@ -9,6 +9,7 @@ public class PlayerMovement : MonoBehaviour {
 
     public bool inRange = false; //in range to pick up tile
     public GameObject tile;
+	public GameObject boardSpace;
 
     public Sprite leftMove;
     public Sprite rightMove;
@@ -16,6 +17,9 @@ public class PlayerMovement : MonoBehaviour {
 
     public bool hasTile = false;
     float cooldown;
+	
+	private TileSpawn spawnner;
+
 
     string xMove = "not moving";
     string yMove = "not moving";
@@ -34,6 +38,8 @@ public class PlayerMovement : MonoBehaviour {
 
     // Use this for initialization
     void Start () {
+		boardSpace = null;
+		spawnner = GameObject.Find("TileSpawnPoints").GetComponent<TileSpawn>();
         GetComponent<SpriteRenderer>().sortingOrder = 1000;
         transform.GetChild(0).GetComponent<SpriteRenderer>().sortingOrder = GetComponent<SpriteRenderer>().sortingOrder - 1;
         anim = GetComponent<Animator>();
@@ -211,20 +217,25 @@ public class PlayerMovement : MonoBehaviour {
             {
                 if (tile.tag != "permanent")
                 {
+					TileMovement t = tile.GetComponent<TileMovement>();
                     hasTile = true;
-                    tile.tag = "picked";
-                    tile.GetComponent<TileMovement>().track = gameObject;
-                    tile.GetComponent<TileMovement>().speed = speed;
+                    tile.GetComponent<SpriteRenderer>().sprite = spawnner.GetSprite("lit", t.value);
+                    t.track = gameObject;
+                    t.speed = speed;
                 }
             }
+
             else if (hasTile)
             {
+				TileMovement t = tile.GetComponent<TileMovement>();
                 hasTile = false;
-                tile.GetComponent<TileMovement>().track = null;
-                tile.GetComponent<TileMovement>().speed = 0;
-                tile.transform.position = transform.position;
-                if (tile.GetComponent<TileMovement>().Snap())
-                    tile.GetComponent<TileMovement>().Check();
+                tile.GetComponent<SpriteRenderer>().sprite = spawnner.GetSprite("norm", t.value);
+                t.track = null;
+                t.speed = 0;
+				if(boardSpace == null)
+					tile.transform.position = transform.position;
+				else
+					boardSpace.GetComponent<BoardTile>().OccupySpace(tile, true);
                 tile = null;
             }
         }

@@ -103,7 +103,6 @@ public class EnemyMovement : MonoBehaviour {
     {
         GetComponent<AudioSource>().Play();
         anim.SetBool("Died", true);
-        transform.localScale *= 1.35f;
         yield return new WaitForSeconds(1);
         Destroy(gameObject);
     }

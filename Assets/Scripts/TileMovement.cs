@@ -5,12 +5,14 @@ using UnityEngine;
 public class TileMovement : MonoBehaviour {
 
     public GameObject track;
+	public BoardTile space;
     public float speed;
 	public string tileType;
 	public int value;
 	public char col;
 	public int row;
 	public int spawn;
+	public bool alreadySet = false;
 	private TileSpawn spawnner;
 	private Main main;
 	
@@ -31,7 +33,6 @@ public class TileMovement : MonoBehaviour {
     void Update() {
 		if(gameObject.tag != "permanent")
 			GetComponent<SpriteRenderer>().sortingOrder = -Mathf.RoundToInt(transform.position.y * 100) - 10;
-        GetComponentInChildren<MeshRenderer>().sortingOrder = GetComponent<SpriteRenderer>().sortingOrder + 1;
 
         if (track != null)
         {
@@ -46,6 +47,7 @@ public class TileMovement : MonoBehaviour {
             if (col.gameObject.tag == "enemy" && enemy.heldTile == null)
             {
                 //pick up tile
+				space.VacateSpace();
                 tag = "taken";
                 track = col.gameObject;
 				enemy.heldTile = this.gameObject;
@@ -80,50 +82,12 @@ public class TileMovement : MonoBehaviour {
 		UpdateSpawn(spawn);
     }
 	
-	public bool Snap() //Snap to closest location
-	{
-		float x = transform.position.x;
-		float y = transform.position.y;
-		float nx = x;
-		float ny = y;
-		
-		// Column
-		if(x < -2.45f){nx = x;col='0';}
-		else if(x < -1.81f){nx = -2.08f;col='A';}
-		else if(x < -1.29f){nx = -1.57f;col='B';}
-		else if(x < -0.78f){nx = -1.05f;col='C';}
-		else if(x < -0.24f){nx = -0.52f;col='D';}
-		else if(x < 0.27f){nx = 0;col='E';}
-		else if(x < 0.79f){nx = 0.52f;col='F';}
-		else if(x < 1.32f){nx = 1.05f;col='G';}
-		else if(x < 1.85f){nx = 1.57f;col='H';}
-		else if(x < 2.36f){nx = 2.08f;col='I';}
-		else{nx = x;col='0';}
-		
-		// Row
-		if(y < -0.05f){ny = y;row=0;}
-		else if(y < 0.58){ny = 0.31f;row=9;}
-		else if(y < 1.09){ny = 0.82f;row=8;}
-		else if(y < 1.62){ny = 1.34f;row=7;}
-		else if(y < 2.14){ny = 1.86f;row=6;}
-		else if(y < 2.63){ny = 2.38f;row=5;}
-		else if(y < 3.15){ny = 2.89f;row=4;}
-		else if(y < 3.66){ny = 3.43f;row=3;}
-		else if(y < 4.22){ny = 3.94f;row=2;}
-		else if(y < 4.73){ny = 4.46f;row=1;}
-		else{ny = y;row=0;}
-		if(main.noSnap[col - 'A', row])
-			return false;
-		transform.position = new Vector3(nx, ny, 0);
-		return true;
-		
-	}
-	
 	public void Check()
 	{
 		if(gameObject.tag == "permanent")
 			return;
 		gameObject.tag = "tile";
+		/* TODO replace lol
 		if(col != '0' && row != 0)
 		{
 			if(main.solution[col-'A', row] == value)
@@ -143,11 +107,13 @@ public class TileMovement : MonoBehaviour {
 		{
 			//Tile was dropped in an area that doesn't matter i guess
 		}
+		*/
 	}
 	
 	public void Despawn()
 	{
 		spawnner.tileCounter[value]--;
+		// DO OTHER THINGS
 		Destroy(this.gameObject);
 	}
 	public void UpdateSpawn(int index)
