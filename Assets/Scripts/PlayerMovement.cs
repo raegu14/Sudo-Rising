@@ -17,14 +17,14 @@ public class PlayerMovement : MonoBehaviour {
 
     public bool hasTile = false;
     float cooldown;
-	
+
+    float atkTimer;
+
 	private TileSpawn spawnner;
 
-
+    private string direction = "";
     string xMove = "not moving";
     string yMove = "not moving";
-
-    string direction = "MovingLeft";
 
 	private int speedTimer = 0, attackTimer = 0;
 	private bool speedPowerup = false, attackPowerup = false;
@@ -92,9 +92,6 @@ public class PlayerMovement : MonoBehaviour {
 		}
 		*/
         
-        //reset weapons
-        transform.GetChild(0).rotation = Quaternion.identity;
-        transform.GetChild(0).gameObject.layer = 12;
 
         //move vertically
         if (yMove == "not moving")
@@ -157,13 +154,13 @@ public class PlayerMovement : MonoBehaviour {
             if (Input.GetKeyDown(Left))
             {
                 xMove = "Left";
-                direction = "MovingLeft";
+                direction = "Left";
                 transform.position += new Vector3(-1, 0, 0) * Time.deltaTime * speed;
             }
             else if (Input.GetKeyDown(Right))
             {
                 xMove = "Right";
-                direction = "MovingRight";
+                direction = "Right";
                 transform.position += new Vector3(1, 0, 0) * Time.deltaTime * speed;
             }
         }
@@ -175,7 +172,7 @@ public class PlayerMovement : MonoBehaviour {
                 if (Input.GetKey(Right))
                 {
                     xMove = "Right";
-                    direction = "MovingRight";
+                    direction = "Right";
                     transform.position += new Vector3(1, 0, 0) * Time.deltaTime * speed;
                 }
                 else
@@ -196,7 +193,7 @@ public class PlayerMovement : MonoBehaviour {
                 if (Input.GetKey(Left))
                 {
                     xMove = "Left";
-                    direction = "MovingLeft";
+                    direction = "Left";
                     transform.position += new Vector3(-1, 0, 0) * Time.deltaTime * speed;
                 }
                 else
@@ -240,56 +237,44 @@ public class PlayerMovement : MonoBehaviour {
             }
         }
 
-        if (Input.GetKey(Attack) && !hasTile)
+        if(atkTimer < Time.time)
+        {
+            //reset weapons
+            transform.GetChild(0).rotation = Quaternion.identity;
+            transform.GetChild(0).gameObject.layer = 12;
+        }
+
+        if (Input.GetKeyDown(Attack) && !hasTile && atkTimer < Time.time)
         {
             //play attack animation
-            anim.SetBool("MovingLeft", false);
-            anim.SetBool("MovingRight", false);
+            atkTimer = Time.time + 0.3f;
             transform.GetChild(0).gameObject.layer = 10;
-            if (direction == "MovingLeft")
+            anim.SetTrigger("Attack");
+            if (direction == "Left")
             {
-                anim.SetTrigger("AttackLeft");
-                anim.SetBool("Move", false);
-                StartCoroutine(paused());
                 transform.GetChild(0).Rotate(new Vector3(0, 0, 90));
             }
             else
             {
-                anim.SetTrigger("AttackRight");
-                anim.SetBool("Move", false);
-                StartCoroutine(paused());
                 transform.GetChild(0).Rotate(new Vector3(0, 0, -90));
             }
         }
-
         else
         {
-            anim.SetBool("Move", true);
             if (xMove == "not moving" && yMove == "not moving")
             {
-                anim.SetBool("MovingRight", false);
-                anim.SetBool("MovingLeft", false);
-                anim.enabled = false;
-                if (direction == "MovingLeft")
-                {
-                    GetComponent<SpriteRenderer>().sprite = leftMove;
-                }
-                else
-                {
-                    GetComponent<SpriteRenderer>().sprite = rightMove;
-                }
+                anim.SetBool("Move", false);
+                //anim.enabled = false;
             }
-            else if (direction == "MovingLeft")
+            else if (direction == "Left")
             {
-                anim.enabled = true;
-                anim.SetBool("MovingRight", false);
-                anim.SetBool("MovingLeft", true);
+                anim.SetBool("Move", true);
+                anim.SetBool("Direction", false);
             }
-            else if (direction == "MovingRight")
+            else if (direction == "Right")
             {
-                anim.enabled = true;
-                anim.SetBool("MovingRight", true);
-                anim.SetBool("MovingLeft", false);
+                anim.SetBool("Move", true);
+                anim.SetBool("Direction", true);
             }
         }
     }
