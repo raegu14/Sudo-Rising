@@ -11,8 +11,6 @@ public class PlayerMovement : MonoBehaviour {
     public GameObject tile;
 	public GameObject boardSpace;
 
-    public Sprite leftMove;
-    public Sprite rightMove;
     private Animator anim;
 
     public bool hasTile = false;
@@ -22,7 +20,7 @@ public class PlayerMovement : MonoBehaviour {
 
 	private TileSpawn spawnner;
 
-    private string direction = "";
+    private string direction = "Left";
     string xMove = "not moving";
     string yMove = "not moving";
 
