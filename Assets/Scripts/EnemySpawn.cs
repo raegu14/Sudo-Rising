@@ -4,6 +4,9 @@ using UnityEngine;
 
 public class EnemySpawn : MonoBehaviour {
 
+    public bool pregame = true;
+    public float timer;
+
     public AudioClip normal;
     public AudioClip fast;
     private AudioSource aud;
@@ -31,38 +34,47 @@ public class EnemySpawn : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 
-		//Periodic Spawn with Enemy Max and small Random component
-		if(spawnTimer + spawnRate < Time.time 
-			&& aliveEnemyCount<maxAliveEnemyCount
-			&& Random.Range(0,100) < 70)
-		{
-			spawnTimer = Time.time;
-			int index = Random.Range(0, 20);
-			int enemyType = Random.Range(0, 2); //TODO establish more logic for enemyType
-			Instantiate(enemies[enemyType], enemySpaces[index].transform.position, enemySpaces[index].transform.rotation);
-			aliveEnemyCount++;
-		}
-
-        if(aliveEnemyCount > maxAliveEnemyCount)
+        if (!pregame && Time.time > timer)
         {
-            if (normalSpeed)
+            print("started spawning things");
+
+            //Periodic Spawn with Enemy Max and small Random component
+            if (spawnTimer + spawnRate < Time.time
+                && aliveEnemyCount < maxAliveEnemyCount
+                && Random.Range(0, 100) < 70)
             {
-                normalSpeed = false;
-                aud.clip = fast;
-                aud.Play();
-                aud.loop = true;
+                spawnTimer = Time.time;
+                int index = Random.Range(0, 20);
+                int enemyType = Random.Range(0, 2); //TODO establish more logic for enemyType
+                Instantiate(enemies[enemyType], enemySpaces[index].transform.position, enemySpaces[index].transform.rotation);
+                aliveEnemyCount++;
+            }
+
+            if (aliveEnemyCount > maxAliveEnemyCount)
+            {
+                if (normalSpeed)
+                {
+                    normalSpeed = false;
+                    aud.clip = fast;
+                    aud.Play();
+                    aud.loop = true;
+                }
+            }
+
+            if (aliveEnemyCount <= maxAliveEnemyCount / 2)
+            {
+                if (!normalSpeed)
+                {
+                    normalSpeed = true;
+                    aud.clip = normal;
+                    aud.Play();
+                    aud.loop = true;
+                }
             }
         }
-
-        if(aliveEnemyCount <= maxAliveEnemyCount / 2)
+        else if (pregame)
         {
-            if (!normalSpeed)
-            {
-                normalSpeed = true;
-                aud.clip = normal;
-                aud.Play();
-                aud.loop = true;
-            }
+            timer = Time.time + 5f;
         }
     }
 

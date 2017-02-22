@@ -11,6 +11,8 @@ public class PlayerMovement : MonoBehaviour {
     public GameObject tile;
 	public GameObject boardSpace;
 
+    public GameObject enemySpawn;
+
     private Animator anim;
 
     public bool hasTile = false;
@@ -20,7 +22,7 @@ public class PlayerMovement : MonoBehaviour {
 
 	private TileSpawn spawnner;
 
-    private string direction = "Left";
+    private string direction;
     string xMove = "not moving";
     string yMove = "not moving";
 
@@ -50,6 +52,7 @@ public class PlayerMovement : MonoBehaviour {
             Right = KeyCode.D;
             PickUp = KeyCode.E;
             Attack = KeyCode.Space;
+            direction = "Right";
         }
         else
         {
@@ -66,6 +69,7 @@ public class PlayerMovement : MonoBehaviour {
             Right = KeyCode.L;
             PickUp = KeyCode.U;
             Attack = KeyCode.M;
+            direction = "Right";
         }
     }
 
@@ -234,10 +238,15 @@ public class PlayerMovement : MonoBehaviour {
                 tile.GetComponent<SpriteRenderer>().sprite = spawnner.GetSprite("norm", t.value);
                 t.track = null;
                 t.speed = 0;
-				if(boardSpace == null)
-					tile.transform.position = transform.position;
-				else
-					boardSpace.GetComponent<BoardTile>().OccupySpace(tile, true);
+                if (boardSpace == null)
+                {
+                    tile.transform.position = transform.position;
+                }
+                else
+                {
+                    bool set = boardSpace.GetComponent<BoardTile>().OccupySpace(tile, true);
+                    enemySpawn.GetComponent<EnemySpawn>().pregame = enemySpawn.GetComponent<EnemySpawn>().pregame & !set;
+                }
                 tile = null;
             }
         }

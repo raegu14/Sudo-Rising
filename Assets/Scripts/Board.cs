@@ -43,6 +43,7 @@ public class Board : MonoBehaviour {
 	
 
 	// Set tile from board
+	// Uses Chess Notation; please be aware that indexing starts at 1
 	public void PlaceTile(char col, int row, GameObject tile)
 	{
 		if(col == '0' || row == 0)
@@ -80,6 +81,7 @@ public class Board : MonoBehaviour {
 	}
 	
 	// Set tile from board space. Return true on success, false otherwise
+	// 0 indexed
 	public bool PlaceTile(int col, int row, GameObject tile)
 	{
 		TileMovement t = tile.GetComponent<TileMovement>();
@@ -97,6 +99,7 @@ public class Board : MonoBehaviour {
 			t.alreadySet = true;
 			spawnner.FreeSpawn(t.value);
 		}
+		SpawnCheck(col, row, t.value);
 		return true;
 	}
 	
@@ -113,18 +116,18 @@ public class Board : MonoBehaviour {
 	
 	//Check whether to spawn a powerup
 	//Assumes that all tiles placed are correct
-	void SpawnCheck(char col, int row, int val)
+	void SpawnCheck(int col, int row, int val)
 	{
-		bool validRow = (row > 0 && row < 10);
-		bool validCol = (col >= 'A' && col < 'J');
-		
+		bool validRow = (row >= 0 && row < 10);
+		bool validCol = (col >= 0 && col < 10);
+		string log = "col:" + col + " ,row:" + row;
 		// Check the tile's row
 		if(validRow)
 		{
 			bool valid = true;
 			for(int i = 0; i < 9; i++)
 			{
-				if(board[i, row] == null) // incomplete row
+				if(!board[i, row].IsOccupied()) // incomplete row
 				{
 					valid = false;
 					break;
@@ -139,10 +142,9 @@ public class Board : MonoBehaviour {
 		if(validCol)
 		{
 			bool valid = true;
-			int c = col-'A';
 			for(int i = 0; i < 9; i++)
 			{
-				if(board[c, i] == null)
+				if(!board[col, i].IsOccupied())
 				{
 					valid = false;
 					break;
@@ -252,19 +254,22 @@ public class Board : MonoBehaviour {
 	   6 | 7 | 8                    */
 	bool BoxCheck(int startCol, int startRow)
 	{
+		Debug.Log("box check " + startCol + " " + startRow);
 		for(int j = startCol; j < startCol+3; j++)
 		{
 			for(int i = startRow; i < startRow+3; i++)
 			{
-				if(board[j, i] == null)
+				if(!board[j, i].IsOccupied())
 					return false;
 			}
 		}
+		Debug.Log("it's fine");
 		return true;
 	}
 	
 	void LockTiles(string kind, int index)
 	{
+		Debug.Log("Locking");
 		switch(kind)
 		{
 			case "row":
@@ -286,6 +291,7 @@ public class Board : MonoBehaviour {
 	
 	void LockBox(int startCol, int startRow)
 	{
+		Debug.Log("Locking");
 		for(int j = startCol; j < startCol+3; j++)
 		{
 			for(int i = startRow; i < startRow+3; i++)

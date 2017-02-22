@@ -28,20 +28,40 @@ public class Main : MonoBehaviour {
 	private Board board;
 	private TileSpawn spawnner;
 
-	// Use this for initialization
-	void Start () {
+    //zoom camera out
+    int curIteration = 0;
+    int finalIteration = 10;
+    Camera cam;
+
+    // Use this for initialization
+    void Start () {
         enemySpaces = GameObject.FindGameObjectsWithTag("enemyspawn");
         tiles = GameObject.FindGameObjectsWithTag("tile");
         spawnTimer = Time.time;
 		board = GameObject.Find("Board").GetComponent<Board>();
 		spawnner = GameObject.Find("TileSpawnPoints").GetComponent<TileSpawn>();
         ReadLevel("board");
-        gameStatus = "Pregame";
+        gameStatus = "before";
+        cam = GetComponent<Camera>();
     }
 
     // Update is called once per frame
     void Update () {
-		if(gameStatus == "GameOver")
+        if(Time.time > 30f && gameStatus == "before")
+        {
+            gameStatus = "Pregame";
+        }
+        if(gameStatus == "Pregame")
+        {
+            if (curIteration < finalIteration)
+            {
+                curIteration++;
+                float t = (float)curIteration / (float)finalIteration;
+                cam.GetComponent<Camera>().orthographicSize = Mathf.Lerp(3f, 5.4f, t);
+                cam.transform.position = new Vector3(0f, Mathf.Lerp(1.8f, 0, t), -1f);
+            }
+        }
+        if (gameStatus == "GameOver")
 		{
 			print("gameover");
 		}

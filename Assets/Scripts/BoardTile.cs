@@ -21,13 +21,14 @@ public class BoardTile : MonoBehaviour {
 	public bool IsOccupied(){
 		return tile != null;
 	}
-	public void OccupySpace(GameObject t, bool needsCheck){
+	public bool OccupySpace(GameObject t, bool needsCheck){
 		if(needsCheck && !board.PlaceTile(col, row, t))
-			return;
+			return false;
 		tile = t;
 		tile.tag = "set";
 		tile.transform.position = gameObject.transform.position;
 		gameObject.GetComponent<SpriteRenderer>().sprite = null;
+        return true;
 	}
 	public void VacateSpace(){
 		tile = null;

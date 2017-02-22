@@ -18,7 +18,7 @@ AnimatorController:
     m_Type: 4
     m_DefaultFloat: 0
     m_DefaultInt: 0
-    m_DefaultBool: 0
+    m_DefaultBool: 1
     m_Controller: {fileID: 0}
   - m_Name: Attack
     m_Type: 9
@@ -627,4 +627,4 @@ AnimatorStateMachine:
   m_EntryPosition: {x: 108, y: 156, z: 0}
   m_ExitPosition: {x: 336, y: 156, z: 0}
   m_ParentStateMachinePosition: {x: 800, y: 20, z: 0}
-  m_DefaultState: {fileID: 1102891451106809446}
+  m_DefaultState: {fileID: 1102879940937767752}

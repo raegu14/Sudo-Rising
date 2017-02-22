@@ -84,6 +84,7 @@ public class EnemyMovement : MonoBehaviour {
 		{
 			heldTile.GetComponent<TileMovement>().track = null;
 			heldTile.tag = "tile";
+			heldTile.transform.position = gameObject.transform.position;
 			heldTile = null;
 		}
 		//enemy dies after 1 second, but loses rigidbody
