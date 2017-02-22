@@ -53,12 +53,19 @@ public class PlayerMovement : MonoBehaviour {
         }
         else
         {
-            Up = KeyCode.UpArrow;
+            /*Up = KeyCode.UpArrow;
             Down = KeyCode.DownArrow;
             Left = KeyCode.LeftArrow;
             Right = KeyCode.RightArrow;
             PickUp = KeyCode.RightAlt;
-            Attack = KeyCode.RightShift;
+            Attack = KeyCode.RightShift;*/
+
+            Up = KeyCode.I;
+            Down = KeyCode.K;
+            Left = KeyCode.J;
+            Right = KeyCode.L;
+            PickUp = KeyCode.U;
+            Attack = KeyCode.M;
         }
     }
 
