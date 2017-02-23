@@ -38,6 +38,7 @@ public class PreGame : MonoBehaviour {
         }
         if (curIterationA == finalIterationA)
         {
+            curIterationA++;
             playerA.GetComponent<PlayerMovement>().enabled = true;
             playerA.GetComponent<Animator>().SetBool("Move", false);
         }
@@ -55,7 +56,8 @@ public class PreGame : MonoBehaviour {
             playerB.transform.position = new Vector3(Mathf.Lerp(-6f, 3.0f, tB), Mathf.Lerp(2f, 2f, tB), 0f);
         }
         if (curIterationB == finalIterationB)
-        {   
+        {
+            curIterationB++;
             playerB.GetComponent<Animator>().SetBool("Direction", false);
             playerB.GetComponent<Animator>().SetBool("Move", false);
             playerB.GetComponent<PlayerMovement>().enabled = true;

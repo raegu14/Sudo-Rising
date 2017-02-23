@@ -42,6 +42,7 @@ public class EnemyMovement : MonoBehaviour {
         if (hasTile)
         {
             direction = new Vector3(-1, -1, 0).normalized;
+            transform.position += direction.normalized * speed * Time.deltaTime;
         }
         else if (!death)
         {
@@ -60,6 +61,7 @@ public class EnemyMovement : MonoBehaviour {
                     direction = obj.transform.position - transform.position;
                 }
             }
+            transform.position += direction.normalized * speed * Time.deltaTime;
         }
         else
         {
@@ -73,7 +75,6 @@ public class EnemyMovement : MonoBehaviour {
         {
             anim.SetBool("Left", false);
         }
-        transform.position += direction.normalized * speed * Time.deltaTime;
     }
 
 	
@@ -94,7 +95,7 @@ public class EnemyMovement : MonoBehaviour {
 		//reduce enemy count
 		enemySpawn.reduceEnemyCount(1);
 
-		direction = new Vector3();
+		//direction = new Vector3();
 		//play death animation
 		StartCoroutine(deathAnim());
 	}

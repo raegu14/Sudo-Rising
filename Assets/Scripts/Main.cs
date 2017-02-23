@@ -23,6 +23,9 @@ public class Main : MonoBehaviour {
 	// UI
 	public TextMesh livesUI;
 	public TextMesh countUI;
+
+    public GameObject controls;
+    private bool isActiveControl = true;
 	
 	// Important objects to keep track of
 	private Board board;
@@ -47,7 +50,7 @@ public class Main : MonoBehaviour {
 
     // Update is called once per frame
     void Update () {
-        if(Time.time > 30f && gameStatus == "before")
+        if(Time.time > 5f && gameStatus == "before")
         {
             gameStatus = "Pregame";
         }
@@ -59,8 +62,16 @@ public class Main : MonoBehaviour {
                 float t = (float)curIteration / (float)finalIteration;
                 cam.GetComponent<Camera>().orthographicSize = Mathf.Lerp(3f, 5.4f, t);
                 cam.transform.position = new Vector3(0f, Mathf.Lerp(1.8f, 0, t), -1f);
+                controls.transform.localScale = new Vector3(Mathf.Lerp(0.6f, 1f, t), Mathf.Lerp(0.6f, 1f, t), 1);
             }
         }
+
+        if (Input.GetKeyDown(KeyCode.LeftShift) || Input.GetKeyDown(KeyCode.RightShift))
+        {
+            isActiveControl = !isActiveControl;
+            controls.SetActive(isActiveControl);
+        }
+
         if (gameStatus == "GameOver")
 		{
 			print("gameover");
