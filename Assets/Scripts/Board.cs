@@ -8,7 +8,7 @@ public class Board : MonoBehaviour {
 	
 	private BoardTile[,] board; // col, row
 	private Main main;
-	private TileSpawn spawnner;
+	public TileSpawn spawnner;
 	private int[,] solution;
 	private int boxCCount = 0;
 
@@ -65,7 +65,6 @@ public class Board : MonoBehaviour {
 				*/
 				space.Explode();
 				t.Despawn();
-				Debug.Log("YOU WERE WRONG-DIEEE");
 				spawnner.FreeSpawn(t.value);
 				return;
 			}
@@ -94,7 +93,6 @@ public class Board : MonoBehaviour {
 		{
 			//Despawn 
 			t.Despawn();
-			Debug.Log("YOU WERE WRONG--DIEEE");
 			spawnner.FreeSpawn(t.value);
 			return false;
 		}
@@ -259,7 +257,6 @@ public class Board : MonoBehaviour {
 	   6 | 7 | 8                    */
 	bool BoxCheck(int startCol, int startRow)
 	{
-		Debug.Log("box check " + startCol + " " + startRow);
 		for(int j = startCol; j < startCol+3; j++)
 		{
 			for(int i = startRow; i < startRow+3; i++)
@@ -268,13 +265,12 @@ public class Board : MonoBehaviour {
 					return false;
 			}
 		}
-		Debug.Log("it's fine");
 		return true;
 	}
 	
 	void LockTiles(string kind, int index)
 	{
-		Debug.Log("Locking");
+		pupSpawn();
 		switch(kind)
 		{
 			case "row":
@@ -296,7 +292,7 @@ public class Board : MonoBehaviour {
 	
 	void LockBox(int startCol, int startRow)
 	{
-		Debug.Log("Locking");
+		pupSpawn();
 		for(int j = startCol; j < startCol+3; j++)
 		{
 			for(int i = startRow; i < startRow+3; i++)

@@ -13,16 +13,12 @@ public class Main : MonoBehaviour {
     float spawnTimer;
     float spawnRate = 2f;
 	
-	public int lives = 5;
 
     string gameStatus;
 
     //timer to end game
     float timer = 500f;
 	
-	// UI
-	public TextMesh livesUI;
-	public TextMesh countUI;
 
     public GameObject controls;
     private bool isActiveControl = true;
@@ -62,7 +58,6 @@ public class Main : MonoBehaviour {
                 float t = (float)curIteration / (float)finalIteration;
                 cam.GetComponent<Camera>().orthographicSize = Mathf.Lerp(3f, 5.4f, t);
                 cam.transform.position = new Vector3(0f, Mathf.Lerp(1.8f, 0, t), -1f);
-                controls.transform.localScale = new Vector3(Mathf.Lerp(0.6f, 1f, t), Mathf.Lerp(0.6f, 1f, t), 1);
             }
         }
 
@@ -80,16 +75,7 @@ public class Main : MonoBehaviour {
 		{
 			print("winner");
 		}
-		int setCount = GameObject.FindGameObjectsWithTag("set").Length;
-        tiles = GameObject.FindGameObjectsWithTag("tile");
-		livesUI.text = "Lives " + lives;
-		countUI.text = setCount + " Correct";
-
-        if (lives < 1)
-        {
-            gameStatus = "GameOver";
-        }
-		
+        tiles = GameObject.FindGameObjectsWithTag("tile");		
 	}
 	void ReadLevel(string fileName) 
 	{

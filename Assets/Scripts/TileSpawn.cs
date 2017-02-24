@@ -7,12 +7,15 @@ using UnityEngine;
 public class TileSpawn : MonoBehaviour {
 
     public GameObject tilePrefab;
+	public GameObject powerupPrefab;
 	public GameObject tileSpritesParent;
 	public GameObject litSpritesParent;
 	public GameObject permSpritesParent;
-	public Sprite[] tileSprites;
+	public GameObject lockSpritesParent;
+	private Sprite[] tileSprites;
 	private Sprite[] litSprites;
 	private Sprite[] permSprites;
+	private Sprite[] lockSprites;
 
 	public GameObject[] tileSpaces;
 	public GameObject[] tiles;
@@ -46,11 +49,13 @@ public class TileSpawn : MonoBehaviour {
 		tileSprites = new Sprite[9];
 		litSprites = new Sprite[9];
 		permSprites = new Sprite[9];
+		lockSprites = new Sprite[9];
 		for(int i = 0; i < 9; i++)
 		{
 			tileSprites[i] = tileSpritesParent.transform.GetChild(i).GetComponent<SpriteRenderer>().sprite;
 			litSprites[i] = litSpritesParent.transform.GetChild(i).GetComponent<SpriteRenderer>().sprite;
 			permSprites[i] = permSpritesParent.transform.GetChild(i).GetComponent<SpriteRenderer>().sprite;
+			lockSprites[i] = lockSpritesParent.transform.GetChild(i).GetComponent<SpriteRenderer>().sprite;
 		}
 	}
 
@@ -69,11 +74,11 @@ public class TileSpawn : MonoBehaviour {
 					if(!spawnIndexMarker[index])
 					{
 						spawnIndexMarker[index] = true;
+						spawned[i] = true;
 						Vector3 loc = tileSpaces[index].transform.position;
 						SpawnTile(loc.x, loc.y, i, index);
 						tileCounter[i]++;
 						activeTileCount++;
-						spawned[i] = true;
 					}
                 }
 
@@ -148,9 +153,12 @@ public class TileSpawn : MonoBehaviour {
 				return litSprites[value-1];
 			case "perm":
 				return permSprites[value-1];
+			case "lock":
+				return lockSprites[value-1];
 			default:
 				return tileSprites[value-1];
 		}
 	}
+	
 }
 
