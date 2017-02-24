@@ -34,6 +34,8 @@ public class Main : MonoBehaviour {
 
     // Use this for initialization
     void Start () {
+        isActiveControl = false;
+        controls.SetActive(isActiveControl);
         enemySpaces = GameObject.FindGameObjectsWithTag("enemyspawn");
         tiles = GameObject.FindGameObjectsWithTag("tile");
         spawnTimer = Time.time;
@@ -52,12 +54,28 @@ public class Main : MonoBehaviour {
         }
         if(gameStatus == "Pregame")
         {
-            if (curIteration < finalIteration)
+            if(curIteration < finalIteration + 50)
             {
                 curIteration++;
+            }
+
+            if (curIteration < finalIteration)
+            {
                 float t = (float)curIteration / (float)finalIteration;
                 cam.GetComponent<Camera>().orthographicSize = Mathf.Lerp(3f, 5.4f, t);
                 cam.transform.position = new Vector3(0f, Mathf.Lerp(1.8f, 0, t), -1f);
+            }
+
+            if (curIteration == finalIteration + 20)
+            {
+                isActiveControl = true;
+                controls.SetActive(isActiveControl);
+            }
+
+            if (curIteration == finalIteration + 50)
+            {
+                isActiveControl = false;
+                controls.SetActive(isActiveControl);
             }
         }
 

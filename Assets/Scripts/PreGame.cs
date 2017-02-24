@@ -12,14 +12,11 @@ public class PreGame : MonoBehaviour {
     int finalIterationB = 200;
     int curIterationB = 0;
 
-    public GameObject controls;
-
     float tA;
     float tB;
 
 	// Use this for initialization
 	void Start () {
-        controls.SetActive(false);
     }
 
     // Update is called once per frame
@@ -61,7 +58,6 @@ public class PreGame : MonoBehaviour {
             playerB.GetComponent<Animator>().SetBool("Direction", false);
             playerB.GetComponent<Animator>().SetBool("Move", false);
             playerB.GetComponent<PlayerMovement>().enabled = true;
-            controls.SetActive(true);
         }
     }
 }
