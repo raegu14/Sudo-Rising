@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class OvenMovement : MonoBehaviour
 {
+    //public int damage;
 
     public float speed;
     public Vector3 direction;
@@ -25,6 +26,7 @@ public class OvenMovement : MonoBehaviour
     // Use this for initialization
     void Start()
     {
+        //damage = 10;
         anim = GetComponent<Animator>();
         enemySpawn = GameObject.Find("EnemySpawnPoints").GetComponent<EnemySpawn>();
         //find closest tile and set direction to it
@@ -90,25 +92,28 @@ public class OvenMovement : MonoBehaviour
 
     public void die()
     {
-        print("help");
-        //tile stops moving
-        if (heldTile != null)
-        {
-            heldTile.GetComponent<TileMovement>().track = null;
-            heldTile.tag = "tile";
-            heldTile.transform.position = gameObject.transform.position;
-            heldTile = null;
-        }
-        //enemy dies after 1 second, but loses rigidbody
-        Destroy(GetComponent<Rigidbody2D>());
-        death = true;
+        //damage--;
+        //if (damage == 0)
+        //{
+            //tile stops moving
+            if (heldTile != null)
+            {
+                heldTile.GetComponent<TileMovement>().track = null;
+                heldTile.tag = "tile";
+                heldTile.transform.position = gameObject.transform.position;
+                heldTile = null;
+            }
+            //enemy dies after 1 second, but loses rigidbody
+            Destroy(GetComponent<Rigidbody2D>());
+            death = true;
 
-        //reduce enemy count
-        enemySpawn.reduceEnemyCount(1);
+            //reduce enemy count
+            enemySpawn.reduceEnemyCount(1);
 
-        //direction = new Vector3();
-        //play death animation
-        StartCoroutine(deathAnim());
+            //direction = new Vector3();
+            //play death animation
+            StartCoroutine(deathAnim());
+        //}
     }
 
 
@@ -116,7 +121,7 @@ public class OvenMovement : MonoBehaviour
     {
         GetComponent<AudioSource>().Play();
         anim.SetBool("Died", true);
-        yield return new WaitForSeconds(1);
+        yield return new WaitForSeconds(3);
         Destroy(gameObject);
     }
 

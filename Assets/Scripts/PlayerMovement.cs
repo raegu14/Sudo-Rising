@@ -7,6 +7,8 @@ public class PlayerMovement : MonoBehaviour {
     public float speed = 2.0f;
     public char player = 'A';
 	public int health = 200;
+	public int MAX_HEALTH = 200;
+	public GameObject hp;
 
     public bool inRange = false; //in range to pick up tile
     public GameObject tile;
@@ -281,6 +283,7 @@ public class PlayerMovement : MonoBehaviour {
                 anim.SetBool("Direction", true);
             }
         }
+		
     }
 	
 	public void Powerup(string pType, float multiplier)
@@ -326,7 +329,8 @@ public class PlayerMovement : MonoBehaviour {
 	public void TakeDamage(int damage)
 	{
 		health = health - damage;
-		// TODO set health
+		Vector3 scale = new Vector3((float)health/MAX_HEALTH, 1, 1);
+		hp.transform.localScale = scale;
 		if(health <= 0)
 		{
 			GameObject.Find("MainCamera").GetComponent<Main>().setGameStatus("GameOver");

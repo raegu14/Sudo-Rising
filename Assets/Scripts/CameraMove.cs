@@ -19,11 +19,8 @@ public class CameraMove : MonoBehaviour {
     float prevY;
     float camY;
 
-    public GameObject text;
-
 	// Use this for initialization
 	void Awake () {
-        text.SetActive(false);
         cam = GameObject.FindGameObjectWithTag("MainCamera");
         cam.GetComponent<Camera>().orthographicSize = 2f;
         cam.transform.position = new Vector3(-5.65f, 13.5f, -10f);
@@ -106,7 +103,6 @@ public class CameraMove : MonoBehaviour {
                 camSize = 5.4f;
                 camX = 0f;
                 camY = 0f;
-                text.SetActive(true);
                 break;
             default:
                 break;
