@@ -90,6 +90,7 @@ public class OvenMovement : MonoBehaviour
 
     public void die()
     {
+        print("help");
         //tile stops moving
         if (heldTile != null)
         {

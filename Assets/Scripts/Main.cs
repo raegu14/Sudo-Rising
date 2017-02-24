@@ -54,7 +54,7 @@ public class Main : MonoBehaviour {
         }
         if(gameStatus == "Pregame")
         {
-            if(curIteration < finalIteration + 50)
+            if(curIteration < finalIteration + 100)
             {
                 curIteration++;
             }
@@ -72,7 +72,7 @@ public class Main : MonoBehaviour {
                 controls.SetActive(isActiveControl);
             }
 
-            if (curIteration == finalIteration + 50)
+            if (curIteration == finalIteration + 100)
             {
                 isActiveControl = false;
                 controls.SetActive(isActiveControl);
@@ -143,5 +143,10 @@ public class Main : MonoBehaviour {
     {
         return gameStatus;
     }
+	
+	public void setGameStatus(string gamestatus)
+	{
+		gameStatus = gamestatus;
+	}
 
 }

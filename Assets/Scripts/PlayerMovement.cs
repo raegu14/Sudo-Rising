@@ -311,7 +311,7 @@ public class PlayerMovement : MonoBehaviour {
 	
 	public IEnumerator Knockback(Vector3 exPos)
 	{
-		// TODO take damage
+		TakeDamage(20);
 		Vector2 newPos = gameObject.transform.position - exPos;
 		Vector2 one = new Vector2(0, 0.5f);
 		// TODO play anim
@@ -321,5 +321,15 @@ public class PlayerMovement : MonoBehaviour {
 		r.AddForce(25*force, ForceMode2D.Impulse);
 		yield return new WaitForSeconds(0.25f);
 		r.velocity = Vector3.zero;
+	}
+	
+	public void TakeDamage(int damage)
+	{
+		health = health - damage;
+		// TODO set health
+		if(health <= 0)
+		{
+			GameObject.Find("MainCamera").GetComponent<Main>().setGameStatus("GameOver");
+		}
 	}
 }
