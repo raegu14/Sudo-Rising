@@ -7,10 +7,12 @@ public class BoardTile : MonoBehaviour {
 	public GameObject tile;
 	public int col, row;
 	private Board board;
+	private PlayerMovement[] ps;
 
 	// Use this for initialization
 	void Start () {
 		board = gameObject.transform.parent.GetComponent<Board>();
+		ps = new PlayerMovement[2];
 	}
 	
 	// Update is called once per frame
@@ -44,6 +46,13 @@ public class BoardTile : MonoBehaviour {
 		//tile.GetComponent<SpriteRenderer>().sprite = board.GetSprite("lock", tile.GetComponent<TileMovement>().value);
 	}
 	
+	public void Explode()
+	{
+		Debug.Log("explode");
+		foreach(PlayerMovement p in ps)
+			p.Knockback(gameObject.transform.position);
+	}
+	
 	void OnTriggerEnter2D(Collider2D col)
 	{
 		// highlight when player is standing over it
@@ -52,6 +61,7 @@ public class BoardTile : MonoBehaviour {
 			gameObject.GetComponent<SpriteRenderer>().sprite = board.glowSprite;
 			PlayerMovement p = col.transform.parent.GetComponent<PlayerMovement>();
 			p.boardSpace = gameObject;
+			ps[p.player - 'A'] = p;
 		}
 	}
 	void OnTriggerExit2D(Collider2D col)
@@ -62,6 +72,7 @@ public class BoardTile : MonoBehaviour {
 			PlayerMovement p = col.transform.parent.GetComponent<PlayerMovement>();
 			if(p.boardSpace == gameObject)
 				p.boardSpace = null;
+			ps[p.player - 'A'] = null;
 		}
 	}
 }

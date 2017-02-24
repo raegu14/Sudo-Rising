@@ -59,6 +59,11 @@ public class Board : MonoBehaviour {
 			if(solution[col-'A', row-1] != t.value) // Incorrect tile
 			{
 				//blow shit up
+				/*
+				PlayerMovement player = t.track.GetComponent<PlayerMovement>();
+				player.Knockback(tile.transform.position);
+				*/
+				space.Explode();
 				t.Despawn();
 				Debug.Log("YOU WERE WRONG-DIEEE");
 				spawnner.FreeSpawn(t.value);

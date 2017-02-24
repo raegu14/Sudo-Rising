@@ -36,7 +36,6 @@ public class EnemySpawn : MonoBehaviour {
 
         if (!pregame && Time.time > timer)
         {
-            print("started spawning things");
 
             //Periodic Spawn with Enemy Max and small Random component
             if (spawnTimer + spawnRate < Time.time

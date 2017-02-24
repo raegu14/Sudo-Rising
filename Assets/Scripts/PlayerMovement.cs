@@ -6,6 +6,7 @@ public class PlayerMovement : MonoBehaviour {
 
     public float speed = 2.0f;
     public char player = 'A';
+	public int health = 200;
 
     public bool inRange = false; //in range to pick up tile
     public GameObject tile;
@@ -83,8 +84,8 @@ public class PlayerMovement : MonoBehaviour {
 		else if(!speedPowerup)
 		{
 			speed = 2.0f;
-			if(tile != null)
-				tile.GetComponent<TileMovement>().speed = speed;
+//			if(tile != null)
+//				tile.GetComponent<TileMovement>().speed = speed;
 		}
 		else
 		{
@@ -227,7 +228,7 @@ public class PlayerMovement : MonoBehaviour {
                     hasTile = true;
                     tile.GetComponent<SpriteRenderer>().sprite = spawnner.GetSprite("lit", t.value);
                     t.track = gameObject;
-                    t.speed = speed;
+//                    t.speed = speed;
                 }
             }
 
@@ -237,7 +238,7 @@ public class PlayerMovement : MonoBehaviour {
                 hasTile = false;
                 tile.GetComponent<SpriteRenderer>().sprite = spawnner.GetSprite("norm", t.value);
                 t.track = null;
-                t.speed = 0;
+                //t.speed = 0;
                 if (boardSpace == null)
                 {
                     tile.transform.position = transform.position;
@@ -299,7 +300,7 @@ public class PlayerMovement : MonoBehaviour {
 		{
 			speed *= multiplier;
 			if(tile != null)
-				tile.GetComponent<TileMovement>().speed = speed;
+				//tile.GetComponent<TileMovement>().speed = speed;
 			speedTimer = 100;
 			speedPowerup = true;
 		}
@@ -313,7 +314,6 @@ public class PlayerMovement : MonoBehaviour {
             //pick up tile
             col.gameObject.tag = "taken";
             GameObject.FindGameObjectWithTag("MainCamera").GetComponent<Main>().tiles = GameObject.FindGameObjectsWithTag("tile");
-			// TODO add tile row/column reclassing
         }
     }
 
@@ -321,4 +321,18 @@ public class PlayerMovement : MonoBehaviour {
     {
         yield return new WaitForSeconds(1f);
     }
+	
+	public IEnumerator Knockback(Vector3 exPos)
+	{
+		Debug.Log("knockback");
+		// TODO take damage
+		Vector2 newPos = gameObject.transform.position - exPos;
+		Vector2 one = new Vector2(1, 1);
+		one.Normalize();
+		newPos.Normalize();
+		// TODO play anim
+		Rigidbody2D r = gameObject.GetComponent<Rigidbody2D>();
+		r.AddForce(one - newPos, ForceMode2D.Impulse);
+		yield return new WaitForSeconds(0.5f);
+	}
 }

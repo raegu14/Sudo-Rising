@@ -15,6 +15,7 @@ TagManager:
   - wall
   - set
   - putindicator
+  - oven
   layers:
   - Default
   - TransparentFX
