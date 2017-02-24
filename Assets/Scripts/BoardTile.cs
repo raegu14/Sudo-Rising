@@ -6,12 +6,17 @@ public class BoardTile : MonoBehaviour {
 	
 	public GameObject tile;
 	public int col, row;
+	public PlayerMovement[] ps;
 	private Board board;
-	private PlayerMovement[] ps;
+	private Animator anim;
+	public AnimationClip boom;
+	
 
 	// Use this for initialization
 	void Start () {
 		board = gameObject.transform.parent.GetComponent<Board>();
+		anim = gameObject.GetComponent<Animator>();
+		anim.Stop();
 		ps = new PlayerMovement[2];
 	}
 	
@@ -24,10 +29,15 @@ public class BoardTile : MonoBehaviour {
 		return tile != null;
 	}
 	public bool OccupySpace(GameObject t, bool needsCheck){
-		if(needsCheck && !board.PlaceTile(col, row, t))
-			return false;
 		tile = t;
-		tile.tag = "set";
+		if(needsCheck && !board.PlaceTile(col, row, t))
+		{
+			Explode();
+			return false;
+		}
+		tile.GetComponent<SpriteRenderer>().sortingOrder = -666;
+		if(tile.tag != "permanent")
+			tile.tag = "set";
 		tile.transform.position = gameObject.transform.position;
 		gameObject.GetComponent<SpriteRenderer>().sprite = null;
         return true;
@@ -42,15 +52,22 @@ public class BoardTile : MonoBehaviour {
 			Debug.Log("WHY ARE YOU LOCKING A NONEXISTENT TILE");
 			return;
 		}
-		tile.tag = "permanent";
-		//tile.GetComponent<SpriteRenderer>().sprite = board.GetSprite("lock", tile.GetComponent<TileMovement>().value);
+		if(tile.tag != "permanent")
+		{			
+			tile.GetComponent<SpriteRenderer>().sprite = board.spawnner.GetSprite("lock", tile.GetComponent<TileMovement>().value);
+			tile.tag = "permanent";
+		}
 	}
 	
 	public void Explode()
 	{
-		Debug.Log("explode");
+		tile = null;
+		anim.Play("Boom Boom");
 		foreach(PlayerMovement p in ps)
-			p.Knockback(gameObject.transform.position);
+		{
+			if(p != null)
+				StartCoroutine(p.Knockback(gameObject.transform.position));
+		}
 	}
 	
 	void OnTriggerEnter2D(Collider2D col)

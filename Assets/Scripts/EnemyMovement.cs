@@ -13,6 +13,8 @@ public class EnemyMovement : MonoBehaviour {
     public bool hasTile;
 	public GameObject heldTile;
 	
+	public int pass = 0;
+	
 	EnemySpawn enemySpawn;
 
     bool death = false;
@@ -98,6 +100,14 @@ public class EnemyMovement : MonoBehaviour {
 		//direction = new Vector3();
 		//play death animation
 		StartCoroutine(deathAnim());
+	}
+	
+	public void Despawn()
+	{
+		if(heldTile != null)
+			heldTile.GetComponent<TileMovement>().Despawn();
+		enemySpawn.reduceEnemyCount(1);
+		Destroy(gameObject);
 	}
 	
 

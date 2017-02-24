@@ -57,13 +57,6 @@ public class PlayerMovement : MonoBehaviour {
         }
         else
         {
-            /*Up = KeyCode.UpArrow;
-            Down = KeyCode.DownArrow;
-            Left = KeyCode.LeftArrow;
-            Right = KeyCode.RightArrow;
-            PickUp = KeyCode.RightAlt;
-            Attack = KeyCode.RightShift;*/
-
             Up = KeyCode.I;
             Down = KeyCode.K;
             Left = KeyCode.J;
@@ -84,8 +77,6 @@ public class PlayerMovement : MonoBehaviour {
 		else if(!speedPowerup)
 		{
 			speed = 2.0f;
-//			if(tile != null)
-//				tile.GetComponent<TileMovement>().speed = speed;
 		}
 		else
 		{
@@ -228,7 +219,7 @@ public class PlayerMovement : MonoBehaviour {
                     hasTile = true;
                     tile.GetComponent<SpriteRenderer>().sprite = spawnner.GetSprite("lit", t.value);
                     t.track = gameObject;
-//                    t.speed = speed;
+					t.UpdateSpawn(t.spawn);
                 }
             }
 
@@ -238,7 +229,6 @@ public class PlayerMovement : MonoBehaviour {
                 hasTile = false;
                 tile.GetComponent<SpriteRenderer>().sprite = spawnner.GetSprite("norm", t.value);
                 t.track = null;
-                //t.speed = 0;
                 if (boardSpace == null)
                 {
                     tile.transform.position = transform.position;
@@ -262,7 +252,7 @@ public class PlayerMovement : MonoBehaviour {
         if (Input.GetKeyDown(Attack) && !hasTile && atkTimer < Time.time)
         {
             //play attack animation
-            atkTimer = Time.time + 0.3f;
+            atkTimer = Time.time + 0.5f;
             transform.GetChild(0).gameObject.layer = 10;
             anim.SetTrigger("Attack");
             if (direction == "Left")
@@ -279,7 +269,6 @@ public class PlayerMovement : MonoBehaviour {
             if (xMove == "not moving" && yMove == "not moving")
             {
                 anim.SetBool("Move", false);
-                //anim.enabled = false;
             }
             else if (direction == "Left")
             {
@@ -299,8 +288,6 @@ public class PlayerMovement : MonoBehaviour {
 		if(pType == "speed")
 		{
 			speed *= multiplier;
-			if(tile != null)
-				//tile.GetComponent<TileMovement>().speed = speed;
 			speedTimer = 100;
 			speedPowerup = true;
 		}
@@ -324,15 +311,15 @@ public class PlayerMovement : MonoBehaviour {
 	
 	public IEnumerator Knockback(Vector3 exPos)
 	{
-		Debug.Log("knockback");
 		// TODO take damage
 		Vector2 newPos = gameObject.transform.position - exPos;
-		Vector2 one = new Vector2(1, 1);
-		one.Normalize();
-		newPos.Normalize();
+		Vector2 one = new Vector2(0, 0.5f);
 		// TODO play anim
 		Rigidbody2D r = gameObject.GetComponent<Rigidbody2D>();
-		r.AddForce(one - newPos, ForceMode2D.Impulse);
-		yield return new WaitForSeconds(0.5f);
+		Vector2 force = newPos - one;
+		force.Normalize();
+		r.AddForce(25*force, ForceMode2D.Impulse);
+		yield return new WaitForSeconds(0.25f);
+		r.velocity = Vector3.zero;
 	}
 }

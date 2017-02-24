@@ -43,7 +43,6 @@ public class TileMovement : MonoBehaviour {
     {
         if (tag == "set")
         {
-
             EnemyMovement enemy = col.GetComponent<EnemyMovement>();
             OvenMovement oven = col.GetComponent<OvenMovement>();
 
@@ -67,7 +66,6 @@ public class TileMovement : MonoBehaviour {
                 main.tiles = GameObject.FindGameObjectsWithTag("tile");
             }
         }
-		UpdateSpawn(spawn);
     }
 
     void OnTriggerStay2D(Collider2D col)
@@ -81,7 +79,6 @@ public class TileMovement : MonoBehaviour {
                 col.gameObject.GetComponent<PlayerMovement>().inRange = true;
             }
         }
-		UpdateSpawn(spawn);
     }
 
     void OnTriggerExit2D(Collider2D col)
@@ -90,7 +87,6 @@ public class TileMovement : MonoBehaviour {
         {
             col.gameObject.GetComponent<PlayerMovement>().inRange = false;
         }
-		UpdateSpawn(spawn);
     }
 	
 	public void Check()
