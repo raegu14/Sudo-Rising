@@ -2,10 +2,9 @@
 using System.Collections.Generic;
 using System.IO;  
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class Main : MonoBehaviour {
-
-    public Sprite staticTile;
 
     public GameObject[] tiles;
 	public GameObject tilePrefab;
@@ -14,73 +13,101 @@ public class Main : MonoBehaviour {
     public GameObject[] enemies;
     float spawnTimer;
     float spawnRate = 2f;
-	
-	public int[] tileCounter;
-	public int[,] solution;
-	public bool[,] noSnap;
-	
-	public int lives = 5;
 
     string gameStatus;
 
     //timer to end game
     float timer = 500f;
-	
-	private int setTiles = 0;
-	
-	// UI
-	public TextMesh livesUI;
-	public TextMesh countUI;
-	
-	
-	
 
-	// Use this for initialization
-	void Start () {
-		tileCounter  = new int[10];
-		solution = new int[10, 10];
-		noSnap = new bool[10, 10];
+    float currentTime;
+
+    public GameObject controls;
+	public AudioClip win;
+	public AudioClip lose;
+    private bool isActiveControl = true;
+	private bool swapped = false;
+	
+	// Important objects to keep track of
+	private Board board;
+	private TileSpawn spawnner;
+	public int switchTimer = 50;
+
+    //zoom camera out
+    int curIteration = 0;
+    int finalIteration = 10;
+    Camera cam;
+
+    // Use this for initialization
+    void Start () {
+        currentTime = Time.time;
+        isActiveControl = false;
+        controls.SetActive(isActiveControl);
         enemySpaces = GameObject.FindGameObjectsWithTag("enemyspawn");
         tiles = GameObject.FindGameObjectsWithTag("tile");
         spawnTimer = Time.time;
+		board = GameObject.Find("Board").GetComponent<Board>();
+		spawnner = GameObject.Find("TileSpawnPoints").GetComponent<TileSpawn>();
         ReadLevel("board");
-        gameStatus = "Pregame";
-
+        gameStatus = "before";
+        cam = GetComponent<Camera>();
     }
 
     // Update is called once per frame
     void Update () {
-		if(gameStatus == "GameOver")
+        if(Time.time - currentTime > 5f && gameStatus == "before")
+        {
+            gameStatus = "Pregame";
+        }
+        if(gameStatus == "Pregame")
+        {
+            if(curIteration <= finalIteration + 100)
+            {
+                curIteration++;
+            }
+
+            if (curIteration <= finalIteration)
+            {
+                float t = (float)curIteration / (float)finalIteration;
+                cam.GetComponent<Camera>().orthographicSize = Mathf.Lerp(3f, 5.4f, t);
+                cam.transform.position = new Vector3(0f, Mathf.Lerp(1.8f, 0, t), -1f);
+            }
+
+            if (curIteration == finalIteration + 20)
+            {
+                isActiveControl = true;
+                controls.SetActive(isActiveControl);
+            }
+
+            if (curIteration == finalIteration + 100)
+            {
+                isActiveControl = false;
+                controls.SetActive(isActiveControl);
+            }
+        }
+
+        if (Input.GetKeyDown(KeyCode.LeftShift) || Input.GetKeyDown(KeyCode.RightShift))
+        {
+            isActiveControl = !isActiveControl;
+            controls.SetActive(isActiveControl);
+        }
+
+        if (gameStatus == "GameOver")
 		{
-			print("gameover");
+			if(!swapped)
+				switchMusic("lose");
+			switchTimer--;
+			if(Input.anyKeyDown && switchTimer < 0)
+				SceneManager.LoadScene("Menu");
 		}
 		else if(gameStatus == "Winner")
 		{
-			print("winner");
+			if(!swapped)
+				switchMusic("win");
+			switchTimer--;
+			if(Input.anyKeyDown && switchTimer < 0)
+				SceneManager.LoadScene("Menu");
 		}
-		int setCount = GameObject.FindGameObjectsWithTag("set").Length;
-        tiles = GameObject.FindGameObjectsWithTag("tile");
-		livesUI.text = "Lives " + lives;
-		countUI.text = setCount + " Correct";
-
-        if (lives < 1)
-        {
-            gameStatus = "GameOver";
-        }
-
-        if(spawnTimer + spawnRate < Time.time)
-        {
-            spawnTimer = Time.time;
-            int index = Random.Range(0, 20);
-            int enemyType = Random.Range(0, 2);
-        }
-		
-		if(setCount + setTiles == 81)
-		{
-			gameStatus = "Winner";
-		}
-		
-		
+        tiles = GameObject.FindGameObjectsWithTag("tile");		
 	}
 	void ReadLevel(string fileName) 
 	{
@@ -111,14 +138,12 @@ public class Main : MonoBehaviour {
 					{
 						int val = int.Parse(coord[1]);
 						int row = int.Parse(firstRead[1].ToString());
+						char col = firstRead[0];
+						board.SetSolution(col, row, val);
 						if(coord[2] == "P")
 						{
-							SetTile(firstRead[0], row, val, "permanent");
-							setTiles++;
-							tileCounter[val]++;
-							noSnap[firstRead[0] - 'A', row] = true;
+							spawnner.SpawnTile(col, row, val);
 						}
-						solution[firstRead[0] - 'A', row] = val;
 						
 					}
 				}
@@ -127,107 +152,31 @@ public class Main : MonoBehaviour {
 		}		
 	}
 	
-	// Set the tile at Column, Row with a specific property
-	// i.e. setTile('D', 4, 4, "permanent"); or something like that
-	void SetTile(char col, int row, int val, string property) 
-	{
-		GameObject tile = Instantiate(tilePrefab);
-        tile.GetComponent<SpriteRenderer>().sprite = staticTile;
-		tile.GetComponent<TileMovement>().tag = property;
-		float x, y;
-		switch(col)
-		{
-			case 'A': // Leftmost column - -2.08
-				x = -2.08f;
-				break;
-			case 'B': 
-				x = -1.57f;
-				break;
-			case 'C': 
-				x = -1.05f;
-				break;
-			case 'D': 
-				x = -0.52f;
-				break;
-			case 'E': // Center column - 0
-				x = 0;
-				break;
-			case 'F': //0.52
-				x = 0.52f;
-				break;
-			case 'G': //1.05
-				x = 1.05f;
-				break;
-			case 'H': //1.57
-				x = 1.57f;
-				break;
-			case 'I': // Rightmost column - 2.08
-				x = 2.08f;
-				break;
-			default:
-				x = 0;
-				Debug.Log("what the heck is this col??");
-				break;
-		}
-		switch(row) 
-		{
-			case 1: // Top row
-				y = 4.46f;
-				break;
-			case 2:
-				y = 3.94f;
-				break;
-			case 3:
-				y = 3.43f;
-				break;
-			case 4:
-				y = 2.89f;
-				break;
-			case 5:
-				y = 2.38f;
-				break;
-			case 6:
-				y = 1.86f;
-				break;
-			case 7:
-				y = 1.34f;
-				break;
-			case 8:
-				y = 0.82f;
-				break;
-			case 9: //Bottom row
-				y = 0.31f;
-				break;
-			default:
-				y = 0;
-				Debug.Log("what the heck is this row??");
-				break;
-		}
-		tile.transform.GetChild(0).transform.GetComponent<TextMesh>().text = val.ToString();
-		tile.GetComponent<TileMovement>().value = val;
-		tile.GetComponent<TileMovement>().col = col;
-		tile.GetComponent<TileMovement>().row = row;
-		tile.transform.position = new Vector3(x, y, 0);
-		if(property == "permanent")
-			 tile.GetComponent<Renderer>().sortingOrder = -600;
-	}
-	
-	// Set tile at specified coordinates
-	void SetTile(float x, float y, int val, string property)
-	{
-		GameObject tile = Instantiate(tilePrefab);
-		tile.GetComponent<TileMovement>().tag = property;
-		
-		tile.transform.GetChild(0).transform.GetComponent<TextMesh>().text = val.ToString();
-		tile.GetComponent<TileMovement>().value = val;
-		tile.GetComponent<TileMovement>().col = '0';
-		tile.GetComponent<TileMovement>().row = 0;
-		tile.transform.position = new Vector3(x, y, 0);
-	}
 	
     public string getGameStatus()
     {
         return gameStatus;
     }
+	
+	public void setGameStatus(string gamestatus)
+	{
+		gameStatus = gamestatus;
+	}
+	
+	public void switchMusic(string state)
+	{
+		AudioSource aud = gameObject.GetComponent<AudioSource>();
+		GameObject.Find("BAM").GetComponent<SpriteRenderer>().enabled = true;
+		if(state == "win")
+		{
+			aud.clip = win;
+		}
+		else // you lost
+		{
+			aud.clip = lose;
+		}
+		aud.Play();
+		swapped = true;
+	}
 
 }

@@ -13,10 +13,13 @@ public class EnemyMovement : MonoBehaviour {
     public bool hasTile;
 	public GameObject heldTile;
 	
+	public int pass = 0;
+	
 	EnemySpawn enemySpawn;
 
     bool death = false;
     Animator anim;
+	
 
 	// Use this for initialization
 	void Start ()
@@ -41,6 +44,7 @@ public class EnemyMovement : MonoBehaviour {
         if (hasTile)
         {
             direction = new Vector3(-1, -1, 0).normalized;
+            transform.position += direction.normalized * speed * Time.deltaTime;
         }
         else if (!death)
         {
@@ -59,6 +63,7 @@ public class EnemyMovement : MonoBehaviour {
                     direction = obj.transform.position - transform.position;
                 }
             }
+            transform.position += direction.normalized * speed * Time.deltaTime;
         }
         else
         {
@@ -72,7 +77,6 @@ public class EnemyMovement : MonoBehaviour {
         {
             anim.SetBool("Left", false);
         }
-        transform.position += direction.normalized * speed * Time.deltaTime;
     }
 
 	
@@ -83,6 +87,7 @@ public class EnemyMovement : MonoBehaviour {
 		{
 			heldTile.GetComponent<TileMovement>().track = null;
 			heldTile.tag = "tile";
+			heldTile.transform.position = gameObject.transform.position;
 			heldTile = null;
 		}
 		//enemy dies after 1 second, but loses rigidbody
@@ -92,9 +97,17 @@ public class EnemyMovement : MonoBehaviour {
 		//reduce enemy count
 		enemySpawn.reduceEnemyCount(1);
 
-		direction = new Vector3();
+		//direction = new Vector3();
 		//play death animation
 		StartCoroutine(deathAnim());
+	}
+	
+	public void Despawn()
+	{
+		if(heldTile != null)
+			heldTile.GetComponent<TileMovement>().Despawn();
+		enemySpawn.reduceEnemyCount(1);
+		Destroy(gameObject);
 	}
 	
 
@@ -102,8 +115,9 @@ public class EnemyMovement : MonoBehaviour {
     {
         GetComponent<AudioSource>().Play();
         anim.SetBool("Died", true);
-        transform.localScale *= 1.35f;
         yield return new WaitForSeconds(1);
         Destroy(gameObject);
     }
+	
+	
 }
