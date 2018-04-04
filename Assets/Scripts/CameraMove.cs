@@ -12,6 +12,7 @@ public class CameraMove : MonoBehaviour {
     int finalIteration = 20;
     int curIteration = 20;
 
+    int offset;
     float prevSize;
     float camSize;
     float prevX;
@@ -27,6 +28,7 @@ public class CameraMove : MonoBehaviour {
         prevSize = 2f;
         prevX = -5.65f;
         prevY = 13.5f;
+        offset = 200;
         camSize = prevSize;
         camX = prevX;
         camY = prevY;
@@ -34,21 +36,23 @@ public class CameraMove : MonoBehaviour {
 
     // Update is called once per frame
     void Update () {
+        curIteration++;
         if (curIteration < finalIteration)
         {
-            curIteration++;
             float t = (float)curIteration / (float)finalIteration;
             cam.GetComponent<Camera>().orthographicSize = Mathf.Lerp(prevSize, camSize, t);
             cam.transform.position = new Vector3(Mathf.Lerp(prevX, camX, t), Mathf.Lerp(prevY, camY, t), -10f);
-
         }
-        else
+        
+        if (curIteration == finalIteration + offset)
         {
+            next();
+            curIteration = 0;
             prevSize = camSize;
             prevX = camX;
             prevY = camY;
         }
-        print(counter);
+
         if (counter >= 7)
         {
             if (Input.GetKey(KeyCode.Space))
@@ -56,6 +60,8 @@ public class CameraMove : MonoBehaviour {
                 SceneManager.LoadScene("Level");
             }
         }
+
+        
     }
 
     public void next()
@@ -63,42 +69,49 @@ public class CameraMove : MonoBehaviour {
         counter++;
         switch (counter){
             case 1:
+                offset = 100;
                 curIteration = 0;
                 camSize = 2f;
                 camX = -5.5f;
                 camY = 10.75f;
                 break;
             case 2:
+                offset = 200;
                 curIteration = 0;
                 camSize = 2.5f;
                 camX = -4.75f;
                 camY = 7.5f;
                 break;
             case 3:
+                offset = 200;
                 curIteration = 0;
                 camSize = 2f;
                 camX = 0f;
                 camY = 13.5f;
                 break;
             case 4:
+                offset = 200;
                 curIteration = 0;
                 camSize = 2f;
                 camX = 5.75f;
                 camY = 13.5f;
                 break;
             case 5:
+                offset = 200;
                 curIteration = 0;
                 camSize = 2.75f;
                 camX = 0.75f;
                 camY = 9.3f;
                 break;
             case 6:
+                offset = 200;
                 curIteration = 0;
                 camSize = 2.75f;
                 camX = 6.25f;
                 camY = 9.75f;
                 break;
             case 7:
+                offset = 3;
                 curIteration = 0;
                 camSize = 5.4f;
                 camX = 0f;

@@ -4,8 +4,9 @@ using UnityEngine;
 
 public class Powerup : MonoBehaviour {
 	
-	private string powerType = "speed";
+	public string powerType = "speed";
 	public float multiplier = 2.0f;
+	public int spawn;
 
 	// Use this for initialization
 	void Start () {
@@ -21,6 +22,7 @@ public class Powerup : MonoBehaviour {
 		if(col.tag == "Player")
 		{
 			col.GetComponent<PlayerMovement>().Powerup(powerType, multiplier);
+			GameObject.Find("TileSpawnPoints").GetComponent<TileSpawn>().spawnIndexMarker[spawn] = false;
 			Destroy(gameObject);
 		}
 	}

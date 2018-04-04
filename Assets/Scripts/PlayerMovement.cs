@@ -6,23 +6,31 @@ public class PlayerMovement : MonoBehaviour {
 
     public float speed = 2.0f;
     public char player = 'A';
+	public int health = 200;
+	public int MAX_HEALTH = 200;
+	public GameObject hp;
 
     public bool inRange = false; //in range to pick up tile
     public GameObject tile;
+	public GameObject boardSpace;
 
-    public Sprite leftMove;
-    public Sprite rightMove;
+    public GameObject enemySpawn;
+
     private Animator anim;
 
-    bool hasTile = false;
+    public bool hasTile = false;
     float cooldown;
 
+    float atkTimer;
+	float MAX_TIMER = 250;
+
+	private TileSpawn spawnner;
+
+    private string direction;
     string xMove = "not moving";
     string yMove = "not moving";
 
-    string direction = "MovingLeft";
-
-	private int speedTimer = 0, attackTimer = 0;
+	private float speedTimer = 0, attackTimer = 0;
 	private bool speedPowerup = false, attackPowerup = false;
 
     KeyCode Up;
@@ -34,6 +42,8 @@ public class PlayerMovement : MonoBehaviour {
 
     // Use this for initialization
     void Start () {
+		boardSpace = null;
+		spawnner = GameObject.Find("TileSpawnPoints").GetComponent<TileSpawn>();
         GetComponent<SpriteRenderer>().sortingOrder = 1000;
         transform.GetChild(0).GetComponent<SpriteRenderer>().sortingOrder = GetComponent<SpriteRenderer>().sortingOrder - 1;
         anim = GetComponent<Animator>();
@@ -46,15 +56,17 @@ public class PlayerMovement : MonoBehaviour {
             Right = KeyCode.D;
             PickUp = KeyCode.E;
             Attack = KeyCode.Space;
+            direction = "Right";
         }
         else
         {
-            Up = KeyCode.UpArrow;
-            Down = KeyCode.DownArrow;
-            Left = KeyCode.LeftArrow;
-            Right = KeyCode.RightArrow;
-            PickUp = KeyCode.RightAlt;
-            Attack = KeyCode.RightShift;
+            Up = KeyCode.I;
+            Down = KeyCode.K;
+            Left = KeyCode.J;
+            Right = KeyCode.L;
+            PickUp = KeyCode.O;
+            Attack = KeyCode.Return;
+            direction = "Right";
         }
     }
 
@@ -68,8 +80,6 @@ public class PlayerMovement : MonoBehaviour {
 		else if(!speedPowerup)
 		{
 			speed = 2.0f;
-			if(tile != null)
-				tile.GetComponent<TileMovement>().speed = speed;
 		}
 		else
 		{
@@ -86,9 +96,6 @@ public class PlayerMovement : MonoBehaviour {
 		}
 		*/
         
-        //reset weapons
-        transform.GetChild(0).rotation = Quaternion.identity;
-        transform.GetChild(0).gameObject.layer = 12;
 
         //move vertically
         if (yMove == "not moving")
@@ -151,13 +158,13 @@ public class PlayerMovement : MonoBehaviour {
             if (Input.GetKeyDown(Left))
             {
                 xMove = "Left";
-                direction = "MovingLeft";
+                direction = "Left";
                 transform.position += new Vector3(-1, 0, 0) * Time.deltaTime * speed;
             }
             else if (Input.GetKeyDown(Right))
             {
                 xMove = "Right";
-                direction = "MovingRight";
+                direction = "Right";
                 transform.position += new Vector3(1, 0, 0) * Time.deltaTime * speed;
             }
         }
@@ -169,7 +176,7 @@ public class PlayerMovement : MonoBehaviour {
                 if (Input.GetKey(Right))
                 {
                     xMove = "Right";
-                    direction = "MovingRight";
+                    direction = "Right";
                     transform.position += new Vector3(1, 0, 0) * Time.deltaTime * speed;
                 }
                 else
@@ -190,7 +197,7 @@ public class PlayerMovement : MonoBehaviour {
                 if (Input.GetKey(Left))
                 {
                     xMove = "Left";
-                    direction = "MovingLeft";
+                    direction = "Left";
                     transform.position += new Vector3(-1, 0, 0) * Time.deltaTime * speed;
                 }
                 else
@@ -203,88 +210,81 @@ public class PlayerMovement : MonoBehaviour {
                 transform.position += new Vector3(1, 0, 0) * Time.deltaTime * speed;
             }
         }
+       
+        if (Input.GetKeyDown(PickUp))
+        {
+            //pick up item
+            if (tile != null && !hasTile && inRange)
+            {
+                if (tile.tag != "permanent")
+                {
+					TileMovement t = tile.GetComponent<TileMovement>();
+                    hasTile = true;
+                    tile.GetComponent<SpriteRenderer>().sprite = spawnner.GetSprite("lit", t.value);
+                    t.track = gameObject;
+					t.UpdateSpawn(t.spawn);
+                }
+            }
 
-        if (Input.GetKey(Attack))
+            else if (hasTile)
+            {
+				TileMovement t = tile.GetComponent<TileMovement>();
+                hasTile = false;
+                tile.GetComponent<SpriteRenderer>().sprite = spawnner.GetSprite("norm", t.value);
+                t.track = null;
+                if (boardSpace == null)
+                {
+                    tile.transform.position = transform.position;
+                }
+                else
+                {
+                    bool set = boardSpace.GetComponent<BoardTile>().OccupySpace(tile, true);
+                    enemySpawn.GetComponent<EnemySpawn>().pregame = enemySpawn.GetComponent<EnemySpawn>().pregame & !set;
+                }
+                tile = null;
+            }
+        }
+
+        if(atkTimer < Time.time)
+        {
+            //reset weapons
+            transform.GetChild(0).rotation = Quaternion.identity;
+            transform.GetChild(0).gameObject.layer = 12;
+        }
+
+        if (Input.GetKeyDown(Attack) && !hasTile && atkTimer < Time.time)
         {
             //play attack animation
-            anim.SetBool("MovingLeft", false);
-            anim.SetBool("MovingRight", false);
+            atkTimer = Time.time + 0.5f;
             transform.GetChild(0).gameObject.layer = 10;
-            if (direction == "MovingLeft")
+            anim.SetTrigger("Attack");
+            if (direction == "Left")
             {
-                anim.SetTrigger("AttackLeft");
-                anim.SetBool("Move", false);
-                StartCoroutine(paused());
                 transform.GetChild(0).Rotate(new Vector3(0, 0, 90));
             }
             else
             {
-                anim.SetTrigger("AttackRight");
-                anim.SetBool("Move", false);
-                StartCoroutine(paused());
                 transform.GetChild(0).Rotate(new Vector3(0, 0, -90));
             }
         }
-
         else
         {
-            anim.SetBool("Move", true);
             if (xMove == "not moving" && yMove == "not moving")
             {
-                anim.SetBool("MovingRight", false);
-                anim.SetBool("MovingLeft", false);
-                anim.enabled = false;
-                if (direction == "MovingLeft")
-                {
-                    GetComponent<SpriteRenderer>().sprite = leftMove;
-                }
-                else
-                {
-                    GetComponent<SpriteRenderer>().sprite = rightMove;
-                }
+                anim.SetBool("Move", false);
             }
-            else if (direction == "MovingLeft")
+            else if (direction == "Left")
             {
-                anim.enabled = true;
-                anim.SetBool("MovingRight", false);
-                anim.SetBool("MovingLeft", true);
+                anim.SetBool("Move", true);
+                anim.SetBool("Direction", false);
             }
-            else if (direction == "MovingRight")
+            else if (direction == "Right")
             {
-                anim.enabled = true;
-                anim.SetBool("MovingRight", true);
-                anim.SetBool("MovingLeft", false);
+                anim.SetBool("Move", true);
+                anim.SetBool("Direction", true);
             }
         }
-
-        if (Input.GetKey(PickUp)) {
-
-            //pick up item
-            if (inRange && tile != null && Time.time > cooldown + 1.0f)
-            {
-                if (!hasTile)
-                {
-                    if (tile.tag != "permanent")
-                    {
-                        hasTile = true;
-                        cooldown = Time.time;
-                        tile.tag = "picked";
-                        tile.GetComponent<TileMovement>().track = gameObject;
-                        tile.GetComponent<TileMovement>().speed = speed;
-                    }
-                }
-                else
-                {
-                    hasTile = false;
-                    cooldown = Time.time;
-                    tile.GetComponent<TileMovement>().track = null;
-                    tile.GetComponent<TileMovement>().speed = 0;
-                    if(tile.GetComponent<TileMovement>().Snap())
-						tile.GetComponent<TileMovement>().Check();
-                    tile = null;
-                }
-            }    
-        }
+		
     }
 	
 	public void Powerup(string pType, float multiplier)
@@ -292,10 +292,14 @@ public class PlayerMovement : MonoBehaviour {
 		if(pType == "speed")
 		{
 			speed *= multiplier;
-			if(tile != null)
-				tile.GetComponent<TileMovement>().speed = speed;
-			speedTimer = 100;
+			speedTimer = MAX_TIMER;
 			speedPowerup = true;
+		}
+		if(pType == "health")
+		{
+			health = Mathf.Min(MAX_HEALTH, health+(int)multiplier);
+			Vector3 scale = new Vector3((float)health/MAX_HEALTH, 1, 1);
+			hp.transform.localScale = scale;
 		}
 		// TODO add other powerups
 	}
@@ -307,7 +311,6 @@ public class PlayerMovement : MonoBehaviour {
             //pick up tile
             col.gameObject.tag = "taken";
             GameObject.FindGameObjectWithTag("MainCamera").GetComponent<Main>().tiles = GameObject.FindGameObjectsWithTag("tile");
-			// TODO add tile row/column reclassing
         }
     }
 
@@ -315,4 +318,29 @@ public class PlayerMovement : MonoBehaviour {
     {
         yield return new WaitForSeconds(1f);
     }
+	
+	public IEnumerator Knockback(Vector3 exPos)
+	{
+		TakeDamage(20);
+		Vector2 newPos = gameObject.transform.position - exPos;
+		Vector2 one = new Vector2(0, 0.5f);
+		// TODO play anim
+		Rigidbody2D r = gameObject.GetComponent<Rigidbody2D>();
+		Vector2 force = newPos - one;
+		force.Normalize();
+		r.AddForce(25*force, ForceMode2D.Impulse);
+		yield return new WaitForSeconds(0.25f);
+		r.velocity = Vector3.zero;
+	}
+	
+	public void TakeDamage(int damage)
+	{
+		health = health - damage;
+		Vector3 scale = new Vector3((float)health/MAX_HEALTH, 1, 1);
+		hp.transform.localScale = scale;
+		if(health <= 0)
+		{
+			GameObject.Find("Main Camera").GetComponent<Main>().setGameStatus("GameOver");
+		}
+	}
 }

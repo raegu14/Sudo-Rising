@@ -20,5 +20,9 @@ public class Weapon : MonoBehaviour {
 		{
 			col.GetComponent<EnemyMovement>().die();
 		}
-	}
+        else if (col.gameObject.tag == "oven")
+        {
+            col.GetComponent<OvenMovement>().die();
+        }
+    }
 }
